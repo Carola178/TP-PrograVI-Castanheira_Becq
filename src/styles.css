@@ -1,1 +1,72 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  /* Paleta de colores estilo Cine / Netflix / Cinema */
+    --color-fondo: #b44141;         
+    --color-superficie: #622a2a;     
+    --color-primario: #a12a2f;      
+    --color-primario-hover: #b80710;
+    --color-texto: #997b7b;          /* Blanco suave */
+    --color-texto-secundario: #94a3b8;/* Gris para texto secundario */
+
+  /* Fuentes y bordes */
+    --fuente-principal: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
+    --radio-borde: 8px;
+    --sombra-card: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos base globales */
+body {
+    background-color:var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--fuente-principal);
+    margin: 0;
+    padding: 0;
+}
+
+/* ---------------------NavNar-----------------------*/
+/* El contenedor principal */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    background-color: var(--color-superficie);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.items-navbar {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.items-navbar a {
+    color: var(--color-texto, #ffffff); 
+    text-decoration: none;             
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+}
+
+.items-navbar a:hover {
+    color: var(--color-primario);
+}
+
+/* Logo */
+.logo{
+    display: flex;
+    align-items: center; 
+}
+/* El título del cine */
+.logo h1 {
+    margin: 0;
+    color: var(--color-texto);
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.logo img{
+    width: 43px;          /* Ajustá el ancho deseado */
+    height: 43px;         /* Ajustá el alto deseado */
+}
+
+
