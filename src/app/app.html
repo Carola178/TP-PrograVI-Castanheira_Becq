@@ -2,16 +2,18 @@
 <!----------------------Navbar----------------->
 <header class="navbar">
   <div class="logo">
-    <img src="assets/logo-cine.png" alt="Logo" class="logo-img">
+    <img src="assets/logo-cine.svg" alt="Logo" class="logo-img">
     <h1>Cine Americano</h1>
   </div>
   <nav class="items-navbar">
-    <a routerLink="/Cartelera">Cartelera</a>
-    <a routerLink="/Candy">Candy</a>
-    <a routerLink="/ProximosEstrenos">Proximos extrenos</a>
-    <a routerLink="/Contacto">Contacto</a>
+    <a routerLink="/cartelera">Cartelera</a>
+    <a routerLink="/candy">Candy</a>
+    <a routerLink="/proximosEstrenos">Proximos extrenos</a>
+    <a routerLink="/contacto">Contacto</a>
   </nav>
 </header>
 
-<router-outlet></router-outlet>
+<main class="body">
+  <router-outlet></router-outlet>
+</main>
 

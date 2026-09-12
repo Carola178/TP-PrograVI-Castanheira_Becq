@@ -1,1 +1,73 @@
-<p>candy works!</p>
+<section class="candy-container">
+  
+  <!-- Sección 1: Ofertas Semanales y Combos Especiales (RF 19) -->
+  <section class="seccion-combos">
+    <div class="titulo-seccion">
+      <h2>Ofertas Semanales y Combos</h2>
+      <p>Aprovechá nuestros combos promocionales a precio exclusivo</p>
+    </div>
+
+    <div class="grid-combos">
+      @for (combo of ofertasSemanales; track combo.id) {
+        <article class="card-candy combo-especial">
+          <span class="badge-oferta">{{ combo.descuentoSemanal }}</span>
+          <img [src]="combo.imagen" [alt]="combo.nombre">
+          
+          <div class="card-body">
+            <h3>{{ combo.nombre }}</h3>
+            <p class="descripcion">{{ combo.descripcion }}</p>
+            
+            <div class="precios-box">
+              <span class="precio">${{ combo.precio }}</span>
+              <!-- Programa de Puntos (RF 24) -->
+              <span class="puntos">Puntuación: {{ combo.puntosCanje }} pts</span>
+            </div>
+
+            <button class="btn-agregar">Agregar al carrito</button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- Sección 2: Productos Individuales por Categoría (RF 18) -->
+  <section class="seccion-productos">
+    <div class="header-productos">
+      <h2>Dulces y Bebidas</h2>
+
+      <!-- Filtro por categorías (RF 18) -->
+      <div class="filtros-categoria">
+        @for (cat of categorias; track cat) {
+          <button 
+            [class.activo]="categoriaSeleccionada === cat" 
+            (click)="categoriaSeleccionada = cat"
+            class="btn-filtro">
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="grid-productos">
+      @for (prod of productosFiltrados; track prod.id) {
+        <article class="card-candy">
+          <span class="categoria-tag">{{ prod.categoria }}</span>
+          <img [src]="prod.imagen" [alt]="prod.nombre">
+          
+          <div class="card-body">
+            <h3>{{ prod.nombre }}</h3>
+            <p class="descripcion">{{ prod.descripcion }}</p>
+
+            <div class="precios-box">
+              <span class="precio">${{ prod.precio }}</span>
+              <span class="puntos">⭐ {{ prod.puntosCanje }} pts</span>
+            </div>
+
+            <button class="btn-agregar">Agregar al carrito</button>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+</section>

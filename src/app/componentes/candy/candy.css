@@ -1,0 +1,203 @@
+/* --- Contenedor General --- */
+.candy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  color: #ffffff;
+}
+
+/* --- Títulos --- */
+.titulo-seccion {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.titulo-seccion h2 {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.titulo-seccion p {
+  color: #bbb;
+  font-size: 0.95rem;
+}
+
+/* --- Sección 1: Combos (Flex/Centrado) --- */
+.seccion-combos {
+  margin-bottom: 4rem;
+}
+
+.grid-combos {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.grid-combos .card-candy {
+  width: 320px;
+  max-width: 100%;
+}
+
+/* --- Sección 2: Productos Individuales --- */
+.header-productos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #8b0000;
+  padding-bottom: 0.8rem;
+}
+
+.header-productos h2 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.filtros-categoria {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-filtro {
+  background-color: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-filtro:hover,
+.btn-filtro.activo {
+  background-color: #8b0000;
+  color: #fff;
+  border-color: #b30000;
+}
+
+.grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem;
+}
+
+/* --- Cards Estilo General Candy --- */
+.card-candy {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #2d2d2d;
+}
+
+.card-candy:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+}
+
+.card-candy.combo-especial {
+  border: 1px solid #ff4d4d;
+}
+
+.card-candy img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Badges */
+.badge-oferta {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #ff1744;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.categoria-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #ffca28;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* Cuerpo de la Card */
+.card-body {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-body h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.4rem 0;
+  color: #fff;
+}
+
+.descripcion {
+  color: #aaa;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
+}
+
+.precios-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.precio {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #00e676;
+}
+
+.puntos {
+  font-size: 0.85rem;
+  color: #ffca28;
+  background-color: #2a2a2a;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Botón */
+.btn-agregar {
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.btn-agregar:hover {
+  background-color: #b30000;
+}

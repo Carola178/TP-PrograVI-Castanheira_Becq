@@ -1,1 +1,83 @@
-<p>cartelera works!</p>
+
+<section class="cartelera-container">
+  
+  <div class="filtros-bar">
+    <input 
+      type="text" 
+      placeholder="Buscar película..." 
+      [(ngModel)]="busqueda"
+      class="input-busqueda"
+    />
+
+    <select [(ngModel)]="generoSeleccionado" class="select-genero">
+      @for (genero of generosDisponibles; track genero) {
+        <option [value]="genero">{{ genero }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Sección de Destacados Centrada / Top 3 (RF 14) -->
+  @if (!busqueda && generoSeleccionado === 'Todos') {
+    <section class="destacados-section">
+      <h2>Películas destacadas</h2>
+      
+      <div class="grid-destacados">
+        @for (pelicula of masVendidas; track pelicula.id) {
+          <article class="card-pelicula destacada">
+            <span class="badge-top">TOP VENDIDA</span>
+            <img [src]="pelicula.imagen" [alt]="pelicula.titulo">
+            
+            <div class="card-body">
+              <div class="generos-tags">
+                @for (g of pelicula.generos; track g) {
+                  <span class="tag-genero">{{ g }}</span>
+                }
+              </div>
+              <h3>{{ pelicula.titulo }}</h3>
+              <p class="estrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+              <p class="duracion">Duración: {{ pelicula.duracion }}</p>
+              <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+              
+              <a [routerLink]="['/cartelera/pelicula', pelicula.id]" class="btn-comprar">Ver detalle</a>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Listado General en Cartelera -->
+  <section class="general-section">
+    <h2>Todas las Películas</h2>
+    
+    <div class="grid-cartelera">
+      @for (pelicula of peliculasFiltradas; track pelicula.id) {
+        <article class="card-pelicula">
+          @if (pelicula.enPreventa) {
+            <span class="badge-preventa">Preventa Exclusiva</span>
+          }
+          <img [src]="pelicula.imagen" [alt]="pelicula.titulo">
+          
+          <div class="card-body">
+            <div class="generos-tags">
+              @for (g of pelicula.generos; track g) {
+                <span class="tag-genero">{{ g }}</span>
+              }
+            </div>
+            <h3>{{ pelicula.titulo }}</h3>
+            <p class="estrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+            <p class="duracion">Duración: {{ pelicula.duracion }}</p>
+            <p class="sinopsis">{{ pelicula.sinopsis }}</p>
+            
+            @if (pelicula.enPreventa) {
+              <p class="precio-preventa">Precio Preventa: ${{ pelicula.precioPreventa }}</p>
+            }
+
+            <a [routerLink]="['/cartelera/pelicula', pelicula.id]" class="btn-comprar">Ver detalle</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+</section>

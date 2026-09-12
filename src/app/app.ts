@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
 
 @Component({
   imports: [RouterOutlet, RouterLink],
@@ -9,4 +9,11 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('tp-cine');
+
+  constructor(private router: Router){
+  }
+
+  navegar(ruta: string) {
+    this.router.navigate([ruta]);
+  }
 }
