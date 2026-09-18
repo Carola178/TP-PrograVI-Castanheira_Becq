@@ -8,12 +8,5 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('tp-cine');
-
-  constructor(private router: Router){
-  }
-
-  navegar(ruta: string) {
-    this.router.navigate([ruta]);
-  }
+  
 }

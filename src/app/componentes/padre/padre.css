@@ -1,9 +1,0 @@
-.padre{
-    background-color: lightblue;
-    width: 500px;
-    height: 500px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid black;
-}

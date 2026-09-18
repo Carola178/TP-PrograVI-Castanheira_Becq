@@ -1,0 +1,22 @@
+
+<div class="login-formulario">
+<form class="loginFormulario" [formGroup]="loginModel" (ngSubmit)="onSubmit($event)">
+    <h2>Inicio de sesión</h2>
+    <div>
+        <label for="email">Email</label>
+        <input type="text" id="nombre" formControlName="email" placeholder="usuario@gmail.com">
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" id="apellido" formControlName="password" placeholder="••••••••">
+    </div>
+    <button type="submit" [disabled]="!loginModel.valid">Ingresar</button>
+    <button type="reset">Limpiar</button>
+</form>
+
+<hr class="divisor" />
+
+    <p class="texto-pregunta">¿No tenes cuenta aún?</p>
+    <a routerLink="/registro">Registrate</a>
+</div>

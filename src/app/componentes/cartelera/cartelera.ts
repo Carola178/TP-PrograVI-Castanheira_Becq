@@ -25,19 +25,16 @@ export interface Pelicula {
   styleUrl: './cartelera.css'
 })
 export class Cartelera {
-  // Prueba de Signals Padre-Hijo
   valor: string = 'mi-dato';
 
   cambiarValor() {
     this.valor = 'Nuevo valor (' + Math.floor(Math.random() * 100) + ')';
   }
 
-  // Filtros
   busqueda: string = '';
   generoSeleccionado: string = 'Todos';
   generosDisponibles: string[] = ['Todos', 'Acción', 'Aventura', 'Drama', 'Ciencia Ficción', 'Terror'];
 
-  // Base de datos de Películas
   peliculas: Pelicula[] = [
     {
       id: 1,
@@ -92,12 +89,11 @@ export class Cartelera {
     this.peliculaSeleccionada = null;
   }
 
-  // Películas más vendidas para el Top 3 (RF 14)
   get masVendidas(): Pelicula[] {
     return this.peliculas.filter(p => p.esMasVendida).slice(0, 3);
   }
 
-  // Filtrado dinámico (RF 13)
+
   get peliculasFiltradas(): Pelicula[] {
     return this.peliculas.filter(p => {
       const coincideTitulo = p.titulo.toLowerCase().includes(this.busqueda.toLowerCase());

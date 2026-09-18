@@ -1,49 +1,48 @@
+import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
-import { Cartelera } from './componentes/cartelera/cartelera';
-import { Candy } from './componentes/candy/candy';
-import { ProximosEstrenos } from './componentes/proximos-estrenos/proximos-estrenos';
-import { Contacto } from './componentes/contacto/contacto';
-import { Pelicula } from './componentes/pelicula/pelicula';
+import { Registro } from './componentes/registro/registro';
 
 export const routes: Routes = [
     {   path: '',
-        redirectTo: 'cartelera',
+        redirectTo: 'login',
         pathMatch: 'full' 
     },
     { 
         path: 'cartelera/pelicula/:id', 
-        component: Pelicula 
+        loadComponent: ()=>import('./componentes/pelicula/pelicula').then(m => m.Pelicula)
     },
 
     {
         path: 'cartelera',
-        component: Cartelera,
+        loadComponent: ()=>import('./componentes/cartelera/cartelera').then(m => m.Cartelera)
     },
 
     {
         path: 'candy',
-        component: Candy,
+        loadComponent: ()=>import('./componentes/candy/candy').then(m => m.Candy)
     },
 
     {
         path: 'proximosEstrenos',
-        component: ProximosEstrenos,
+        loadComponent: ()=>import('./componentes/proximos-estrenos/proximos-estrenos').then(m => m.ProximosEstrenos)
     },
 
     {
         path: 'contacto',
-        component: Contacto,
+        loadComponent: ()=>import('./componentes/contacto/contacto').then(m => m.Contacto)
+    },
+    {
+        path: 'login',
+        loadComponent: ()=>import('./componentes/login/login').then(m=>m.Login)
+    },
+    {
+        path: 'registro',
+        loadComponent: ()=>import('./componentes/registro/registro').then(m=>m.Registro)
     },
 
-
-    // {
-    //     path: 'error',
-    //     component: Error
-    // },
-
-    // {
-    //     path: '**',
-    //     component: Error
-    // }
+    {
+        path: '**',
+        component: Error
+    }
 
 ];

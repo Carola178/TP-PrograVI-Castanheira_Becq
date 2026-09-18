@@ -8,9 +8,9 @@ interface ProductoCandy {
   categoria: 'Pochoclos' | 'Bebidas' | 'Otros' | 'Combos';
   descripcion: string;
   precio: number;
-  puntosCanje?: number; // RF 24
+  puntosCanje?: number; 
   imagen: string;
-  esComboEspecial?: boolean; // RF 19
+  esComboEspecial?: boolean; 
   descuentoSemanal?: string;
 }
 
