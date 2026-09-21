@@ -83,7 +83,7 @@
 .texto-pregunta{
     text-align: center;
 }
-/* Mostrar el campo en rojo si no lo completa*/
+
 input.ng-touched.ng-invalid{
     border: 1px solid red;
     &:focus{

@@ -1,4 +1,3 @@
-
 <section class="cartelera-container">
   
   <div class="filtros-bar">
@@ -16,7 +15,7 @@
     </select>
   </div>
 
-  <!-- Sección de Destacados Centrada / Top 3 (RF 14) -->
+  <!-- Sección de Destacados Centrada / Top 3 -->
   @if (!busqueda && generoSeleccionado === 'Todos') {
     <section class="destacados-section">
       <h2>Películas destacadas</h2>
@@ -24,18 +23,16 @@
       <div class="grid-destacados">
         @for (pelicula of masVendidas; track pelicula.id) {
           <article class="card-pelicula destacada">
-            <span class="badge-top">TOP VENDIDA</span>
-            <img [src]="pelicula.imagen" [alt]="pelicula.titulo">
+            <span class="badge-top">TOP 3 VENDIDAS</span>
+            <img [src]="pelicula.imagenUrl" [alt]="pelicula.titulo">
             
             <div class="card-body">
-              <div class="generos-tags">
-                @for (g of pelicula.generos; track g) {
-                  <span class="tag-genero">{{ g }}</span>
-                }
+              <div class="generos-tags" *ngIf="pelicula.generos">
+                <span class="tag-genero">{{ pelicula.generos }}</span>
               </div>
               <h3>{{ pelicula.titulo }}</h3>
-              <p class="estrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
-              <p class="duracion">Duración: {{ pelicula.duracion }}</p>
+              <p class="estrellas" *ngIf="pelicula.promedioEstrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+              <p class="duracion" *ngIf="pelicula.duracionMinutos">Duración: {{ pelicula.duracionMinutos }} min</p>
               <p class="sinopsis">{{ pelicula.sinopsis }}</p>
               
               <a [routerLink]="['/cartelera/pelicula', pelicula.id]" class="btn-comprar">Ver detalle</a>
@@ -56,17 +53,15 @@
           @if (pelicula.enPreventa) {
             <span class="badge-preventa">Preventa Exclusiva</span>
           }
-          <img [src]="pelicula.imagen" [alt]="pelicula.titulo">
+          <img [src]="pelicula.imagenUrl" [alt]="pelicula.titulo">
           
           <div class="card-body">
-            <div class="generos-tags">
-              @for (g of pelicula.generos; track g) {
-                <span class="tag-genero">{{ g }}</span>
-              }
+            <div class="generos-tags" *ngIf="pelicula.generos">
+              <span class="tag-genero">{{ pelicula.generos }}</span>
             </div>
             <h3>{{ pelicula.titulo }}</h3>
-            <p class="estrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
-            <p class="duracion">Duración: {{ pelicula.duracion }}</p>
+            <p class="estrellas" *ngIf="pelicula.promedioEstrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+            <p class="duracion" *ngIf="pelicula.duracionMinutos">Duración: {{ pelicula.duracionMinutos }} min</p>
             <p class="sinopsis">{{ pelicula.sinopsis }}</p>
             
             @if (pelicula.enPreventa) {

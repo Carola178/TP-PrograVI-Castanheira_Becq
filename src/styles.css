@@ -1,11 +1,10 @@
 :root {
-  /* Paleta de colores estilo Cine / Netflix / Cinema */
     --color-fondo: #b44141;         
     --color-superficie: #622a2a;     
     --color-primario: #a12a2f;      
     --color-primario-hover: #b80710;
-    --color-texto: #aaa3a3;          /* Blanco suave */
-    --color-texto-secundario: #94a3b8;/* Gris para texto secundario */
+    --color-texto: #aaa3a3;          
+    --color-texto-secundario: #94a3b8;
 
   /* Fuentes y bordes */
     --fuente-principal: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,7 +22,6 @@ body {
 }
 
 /* ---------------------NavNar-----------------------*/
-/* El contenedor principal */
 .navbar {
     display: flex;
     justify-content: space-between;

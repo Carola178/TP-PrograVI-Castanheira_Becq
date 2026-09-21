@@ -7,16 +7,14 @@ export const routes: Routes = [
         redirectTo: 'login',
         pathMatch: 'full' 
     },
-    { 
-        path: 'cartelera/pelicula/:id', 
-        loadComponent: ()=>import('./componentes/pelicula/pelicula').then(m => m.Pelicula)
-    },
-
     {
         path: 'cartelera',
         loadComponent: ()=>import('./componentes/cartelera/cartelera').then(m => m.Cartelera)
     },
-
+    { 
+        path: 'cartelera/pelicula/:id', 
+        loadComponent: ()=>import('./componentes/pelicula/pelicula').then(m => m.Pelicula)
+    },
     {
         path: 'candy',
         loadComponent: ()=>import('./componentes/candy/candy').then(m => m.Candy)
@@ -26,7 +24,6 @@ export const routes: Routes = [
         path: 'proximosEstrenos',
         loadComponent: ()=>import('./componentes/proximos-estrenos/proximos-estrenos').then(m => m.ProximosEstrenos)
     },
-
     {
         path: 'contacto',
         loadComponent: ()=>import('./componentes/contacto/contacto').then(m => m.Contacto)
@@ -39,7 +36,6 @@ export const routes: Routes = [
         path: 'registro',
         loadComponent: ()=>import('./componentes/registro/registro').then(m=>m.Registro)
     },
-
     {
         path: '**',
         component: Error

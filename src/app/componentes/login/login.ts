@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { form, required, email, FormField } from '@angular/forms/signals';
+import { form, required, email } from '@angular/forms/signals';
 import { Auth } from '../../services/auth';
 import { LoginData } from '../../models/loginData';
 import { Router, RouterLink } from '@angular/router';
@@ -9,7 +9,7 @@ import { passwordsIncorrectas } from '../validators/usuario.validators';
 
 
 @Component({
-  imports: [FormField, RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
@@ -34,7 +34,6 @@ export class Login implements OnInit{
   }
   mostrar(){
     // console.log(this.loginModel.value)
-    const email = this.loginModel.controls.email;
     console.log(this.loginModel.valid);
 
   }

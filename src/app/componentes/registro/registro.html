@@ -1,1 +1,66 @@
-<p>registro works!</p>
+<div class="registro-formulario">
+<form class="registroFormulario" [formGroup]="registroModel" (ngSubmit)="onSubmit($event)">
+    <h2>Registro de usuarios</h2>
+    <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" formControlName="nombre">
+    </div>
+
+    <div>
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" formControlName="apellido">
+    </div>
+
+    <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" formControlName="email" placeholder="usuario@gmail.com">
+    </div>
+
+    <div>
+        <label for="fecha_nacimiento">Fecha de nacimiento</label>
+        <input type="date" id="fecha_nacimiento" formControlName="fechaNacimiento" max="2026-09-20" min="1900-01-01" placeholder="Ej: 12/12/2012">
+    </div>
+
+    <div>
+        <label for="tipo_sangre">Tipo de sangre</label>
+        <select id="tipo_sangre" formControlName="tipoSangre">
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="color_ojos">Color de ojos</label>
+        <select id="color_ojos" formControlName="colorOjos">
+            <option value="" disabled selected>Seleccione un color</option>
+            <option value="Marrón">Marrón / Café</option>
+            <option value="Azul">Azul</option>
+            <option value="Verde">Verde</option>
+            <option value="Miel / Avellana">Miel / Avellana</option>
+            <option value="Negro">Negro</option>
+            <option value="Gris">Gris</option>
+            <option value="Otro">Otro</option>>
+    </select>
+    </div>
+
+    <div>
+        <label for="dias_vacaciones">Días de vacaciones</label>
+        <input type="number" id="dias_vacaciones" formControlName="diasVacaciones" min="0" max="365" step="1" placeholder="Ej: 7">
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" id="apellido" formControlName="password" placeholder="••••••••">
+    </div>
+
+    <button type="submit" [disabled]="!registroModel.valid">Crear cuenta</button>
+    <button type="reset">Limpiar</button>
+</form>
+</div>
