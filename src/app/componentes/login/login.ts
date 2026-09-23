@@ -33,11 +33,8 @@ export class Login implements OnInit{
 
   }
   mostrar(){
-    // console.log(this.loginModel.value)
     console.log(this.loginModel.valid);
-
   }
-
 
   constructor(private auth: Auth, private router: Router) {}
 

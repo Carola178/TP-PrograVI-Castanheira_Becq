@@ -1,6 +1,5 @@
 <section class="candy-container">
   
-  <!-- Sección 1: Ofertas Semanales y Combos Especiales (RF 19) -->
   <section class="seccion-combos">
     <div class="titulo-seccion">
       <h2>Ofertas Semanales y Combos</h2>
@@ -10,8 +9,11 @@
     <div class="grid-combos">
       @for (combo of ofertasSemanales; track combo.id) {
         <article class="card-candy combo-especial">
-          <span class="badge-oferta">{{ combo.descuentoSemanal }}</span>
-          <img [src]="combo.imagen" [alt]="combo.nombre">
+          <!-- Corregido: descuento_semanal -->
+          <span class="badge-oferta" *ngIf="combo.descuento_semanal">{{ combo.descuento_semanal }}</span>
+          
+          <!-- Corregido: imagen_url -->
+          <img [src]="combo.imagen_url" [alt]="combo.nombre">
           
           <div class="card-body">
             <h3>{{ combo.nombre }}</h3>
@@ -19,8 +21,7 @@
             
             <div class="precios-box">
               <span class="precio">${{ combo.precio }}</span>
-              <!-- Programa de Puntos (RF 24) -->
-              <span class="puntos">Puntuación: {{ combo.puntosCanje }} pts</span>
+              <span class="puntos" *ngIf="combo.puntos_canje">Puntuación: {{ combo.puntos_canje }} pts</span>
             </div>
 
             <button class="btn-agregar">Agregar al carrito</button>
@@ -30,12 +31,11 @@
     </div>
   </section>
 
-  <!-- Sección 2: Productos Individuales por Categoría (RF 18) -->
+  <!-- PRODUCTOS GENERALES -->
   <section class="seccion-productos">
     <div class="header-productos">
       <h2>Dulces y Bebidas</h2>
 
-      <!-- Filtro por categorías (RF 18) -->
       <div class="filtros-categoria">
         @for (cat of categorias; track cat) {
           <button 
@@ -52,7 +52,8 @@
       @for (prod of productosFiltrados; track prod.id) {
         <article class="card-candy">
           <span class="categoria-tag">{{ prod.categoria }}</span>
-          <img [src]="prod.imagen" [alt]="prod.nombre">
+          
+          <img [src]="prod.imagen_url" [alt]="prod.nombre">
           
           <div class="card-body">
             <h3>{{ prod.nombre }}</h3>
@@ -60,7 +61,7 @@
 
             <div class="precios-box">
               <span class="precio">${{ prod.precio }}</span>
-              <span class="puntos">⭐ {{ prod.puntosCanje }} pts</span>
+              <span class="puntos" *ngIf="prod.puntos_canje">⭐ {{ prod.puntos_canje }} pts</span>
             </div>
 
             <button class="btn-agregar">Agregar al carrito</button>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -19,37 +19,46 @@ export class Cartelera implements OnInit {
 
   peliculas: PeliculaData[] = [];
 
-  constructor(private peliculaServicio: PeliculaServicio) {}
+  constructor(
+    private peliculaServicio: PeliculaServicio,
+    private cdr: ChangeDetectorRef 
+  ) {}
 
-  async ngOnInit() {
-    await this.cargarCartelera();
+  ngOnInit(): void {
+    this.cargarCartelera();
   }
 
-  async cargarCartelera() {
-    this.peliculas = await this.peliculaServicio.getPeliculas();
+  cargarCartelera(): void {
+    this.peliculaServicio.getPeliculas()
+      .then((datos: PeliculaData[]) => {
+        console.log('Películas cargadas:', datos);
+        this.peliculas = datos;
+        this.cdr.detectChanges(); // Forzamos a Angular a renderizar las películas
+      })
+      .catch((err: unknown) => {
+        console.error('Error al traer películas de la BDD:', err);
+      });
   }
-
 
   get masVendidas(): PeliculaData[] {
     return this.peliculas ? this.peliculas.slice(0, 3) : [];
   }
 
   get peliculasFiltradas(): PeliculaData[] {
-  if (!this.peliculas) return [];
+    if (!this.peliculas) return [];
 
-  return this.peliculas.filter(p => {
-    const coincideTitulo = p.titulo 
-      ? p.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) 
-      : true;
+    return this.peliculas.filter(p => {
+      const coincideTitulo = p.titulo 
+        ? p.titulo.toLowerCase().includes(this.busqueda.toLowerCase()) 
+        : true;
 
-    
-    let coincideGenero = true;
-    if (this.generoSeleccionado !== 'Todos') {
-      const generosTexto = String(p.generos || '');
-      coincideGenero = generosTexto.toLowerCase().includes(this.generoSeleccionado.toLowerCase());
-    }
+      let coincideGenero = true;
+      if (this.generoSeleccionado !== 'Todos') {
+        const generosTexto = String(p.generos || '');
+        coincideGenero = generosTexto.toLowerCase().includes(this.generoSeleccionado.toLowerCase());
+      }
 
-    return coincideTitulo && coincideGenero;
-  });
-}
+      return coincideTitulo && coincideGenero;
+    });
+  }
 }
