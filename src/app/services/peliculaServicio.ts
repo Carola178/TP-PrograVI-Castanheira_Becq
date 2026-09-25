@@ -30,12 +30,27 @@ export class PeliculaServicio {
 
   async getPeliculaPorId(id: string | number): Promise<PeliculaData | null> {
     const { data, error } = await this.supabase
-      .from('Peliculas').select('*').eq('id', id).single();
+      .from('Peliculas')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle(); 
 
-    if (error) {
+    if (error || !data) {
       console.error(`Error al obtener película con id ${id}:`, error);
       return null;
     }
-    return data as PeliculaData;
+
+    return {
+      id: data.id,
+      titulo: data.titulo,
+      sinopsis: data.sinopsis,
+      duracionMinutos: data.duracionMinutos ?? data.duracion_minutos,
+      imagenUrl: data.imagenUrl ?? data.imagen_url,
+      generos: data.generos,
+      esMasVendida: data.esMasVendida ?? data.es_mas_vendida,
+      enPreventa: data.enPreventa ?? data.en_preventa,
+      precioPreventa: data.precioPreventa ?? data.precio_preventa,
+      promedioEstrellas: data.promedioEstrellas ?? data.promedio_estrellas
+    };
   }
 }

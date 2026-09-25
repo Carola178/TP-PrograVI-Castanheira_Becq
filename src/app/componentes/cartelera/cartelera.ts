@@ -33,7 +33,7 @@ export class Cartelera implements OnInit {
       .then((datos: PeliculaData[]) => {
         console.log('Películas cargadas:', datos);
         this.peliculas = datos;
-        this.cdr.detectChanges(); // Forzamos a Angular a renderizar las películas
+        this.cdr.detectChanges(); 
       })
       .catch((err: unknown) => {
         console.error('Error al traer películas de la BDD:', err);

@@ -1,0 +1,136 @@
+.detalle-pelicula-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.btn-volver {
+    display: inline-block;
+    color: #ff8a8a;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    transition: color 0.2s ease;
+}
+
+.btn-volver:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.detalle-card {
+    display: flex;
+    gap: 2.5rem;
+    background-color: #2b1f1f;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    align-items: flex-start;
+}
+
+.poster-detalle {
+    width: 300px;
+    max-width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+}
+
+.detalle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.detalle-info h1 {
+    font-size: 2.2rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.detalle-info p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+
+.detalle-info strong {
+    color: #ffffff;
+}
+
+.sinopsis {
+    line-height: 1.6;
+    margin-top: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    color: #cccccc !important;
+}
+
+.badge-preventa {
+    background-color: #d93838;
+    border-left: 4px solid #ff4d4d;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    margin: 1rem 0 1.5rem 0;
+}
+
+.badge-preventa p {
+    margin: 0.2rem 0;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.btn-comprar-ticket {
+    align-self: flex-start;
+    background-color: #e50914;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-top: 1rem;
+}
+
+.btn-comprar-ticket:hover {
+    background-color: #b80710;
+    transform: translateY(-2px);
+}
+
+.btn-comprar-ticket:active {
+    transform: translateY(0);
+}
+
+.loading, .error {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+.detalle-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.poster-detalle {
+    width: 220px;
+    }
+
+.detalle-info h1 {
+    font-size: 1.8rem;
+    text-align: center;
+    }
+
+.btn-comprar-ticket {
+    width: 100%;
+    text-align: center;
+    }
+}

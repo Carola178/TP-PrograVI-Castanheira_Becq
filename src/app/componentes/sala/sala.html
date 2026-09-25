@@ -1,0 +1,80 @@
+<div class="sala-container">
+<div class="mapa-asientos">
+    @for (fila of filasLetras; track fila) {
+      <div class="pasillo-horizontal" *ngIf="fila === 'K'"></div>
+
+        <div class="fila">
+        <span class="letra-fila">{{ fila }}</span>
+
+        <div class="bloque">
+            @for (col of bloqueIzq; track col) {
+            @let b = matrizButacas[fila + '-' + col];
+            <button 
+                class="seat" 
+                [ngClass]="{
+                'vip': b?.esVip,
+                'ocupada': b?.ocupada,
+                'seleccionada': b?.seleccionada
+                }"
+                [disabled]="b?.ocupada"
+                (click)="toggleSeleccion(b)">
+                {{ col }}
+            </button>
+            }
+        </div>
+
+        <div class="pasillo-vertical"></div>
+
+        <div class="bloque centro">
+            @for (col of bloqueCentro; track col) {
+            @let b = matrizButacas[fila + '-' + col];
+            <button 
+                class="seat" 
+                [ngClass]="{
+                'vip': b?.esVip,
+                'ocupada': b?.ocupada,
+                'seleccionada': b?.seleccionada
+                }"
+                [disabled]="b?.ocupada"
+                (click)="toggleSeleccion(b)">
+                {{ col }}
+            </button>
+            }
+        </div>
+
+        <div class="pasillo-vertical"></div>
+
+        <div class="bloque">
+            @for (col of bloqueDer; track col) {
+            @let b = matrizButacas[fila + '-' + col];
+            <button 
+                class="seat" 
+                [ngClass]="{
+                'vip': b?.esVip,
+                'ocupada': b?.ocupada,
+                'seleccionada': b?.seleccionada
+                }"
+                [disabled]="b?.ocupada"
+                (click)="toggleSeleccion(b)">
+                {{ col }}
+            </button>
+            }
+        </div>
+
+        <span class="letra-fila">{{ fila }}</span>
+        </div>
+    }
+</div>
+
+  <div class="resumen-seleccion" *ngIf="asientosSeleccionados.length > 0">
+    <p>Asientos seleccionados: 
+        <span>
+        @for (item of asientosSeleccionados; track $index) {
+            {{ item.fila }}-{{ item.columna }}{{ $last ? '' : ', ' }}
+        }
+        </span>
+    </p>
+    <button class="btn-confirmar"(click)="confirmarReserva()" [disabled]="asientosSeleccionados.length === 0">Confirmar selección</button>
+    </div>
+
+</div>

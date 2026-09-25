@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PeliculaData } from '../../models/peliculaData';
@@ -13,10 +13,12 @@ import { PeliculaServicio } from '../../services/peliculaServicio';
 })
 export class Pelicula implements OnInit {
   pelicula: PeliculaData | null = null;
+  cargando: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
-    private peliculaServicio: PeliculaServicio
+    private peliculaServicio: PeliculaServicio,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -24,5 +26,7 @@ export class Pelicula implements OnInit {
     if (id) {
       this.pelicula = await this.peliculaServicio.getPeliculaPorId(id);
     }
+    this.cargando = false;
+    this.cdr.detectChanges(); 
   }
 }
