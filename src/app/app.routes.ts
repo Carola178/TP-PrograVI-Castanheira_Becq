@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
-import { Registro } from './componentes/registro/registro';
-import { Sala } from './componentes/sala/sala';
 
 export const routes: Routes = [
     {   path: '',
@@ -39,7 +37,11 @@ export const routes: Routes = [
     },
     { 
     path: 'sala/:funcionId', 
-    component: Sala 
+    loadComponent: ()=>import('./componentes/sala/sala').then(m => m.Sala)
+    },
+    { 
+    path: 'pago', 
+    loadComponent: ()=>import('./componentes/pago/pago').then(m => m.Pago)
     },
     {
         path: '**',

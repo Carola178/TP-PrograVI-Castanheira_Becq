@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { PeliculaData } from '../../models/peliculaData';
 import { PeliculaServicio } from '../../services/peliculaServicio';
+import { CompraServicio } from '../../services/compraServicio';
 
 @Component({
   selector: 'app-cartelera',
@@ -21,6 +22,8 @@ export class Cartelera implements OnInit {
 
   constructor(
     private peliculaServicio: PeliculaServicio,
+    private compraServicio: CompraServicio,
+    private router: Router,
     private cdr: ChangeDetectorRef 
   ) {}
 
@@ -60,5 +63,15 @@ export class Cartelera implements OnInit {
 
       return coincideTitulo && coincideGenero;
     });
+  }
+
+  seleccionarPelicula(pelicula: PeliculaData, irASala: boolean = true): void {
+    this.compraServicio.seleccionarFuncion(pelicula);
+
+  if (irASala) {
+      this.router.navigate(['/sala', pelicula.id]); 
+    } else {
+      this.router.navigate(['/pelicula', pelicula.id]);
+    }
   }
 }

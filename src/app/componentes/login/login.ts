@@ -1,12 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { form, required, email } from '@angular/forms/signals';
 import { Auth } from '../../services/auth';
-import { LoginData } from '../../models/loginData';
 import { Router, RouterLink } from '@angular/router';
-import { FormControl, FormGroup, ɵInternalFormsSharedModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordsIncorrectas } from '../validators/usuario.validators';
-
-
 
 @Component({
   imports: [RouterLink, ReactiveFormsModule],
@@ -14,42 +10,43 @@ import { passwordsIncorrectas } from '../validators/usuario.validators';
   styleUrl: './login.css',
   templateUrl: './login.html',
 })
+export class Login implements OnInit {
+  errorMessage = signal<string | null>(null);
 
-
-//formularios que funcionan con los fomrularios, las validaciones se hacen ahi mismo
-export class Login implements OnInit{
   loginModel = new FormGroup({
-      //controles para los campos//
-    email: new FormControl ("", {
+    email: new FormControl("", {
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(25), Validators.email]
     }),
     password: new FormControl("", {
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(12), passwordsIncorrectas()]
     })
-
-  })
-  ngOnInit(): void {
-    this.loginModel.valueChanges.subscribe(estado => console.log(estado)) //observables, se actualiza todo el estado
-
-  }
-  mostrar(){
-    console.log(this.loginModel.valid);
-  }
+  });
 
   constructor(private auth: Auth, private router: Router) {}
 
-  async onSubmit(event: Event){
-    event.preventDefault();
-
-    const credenciales = this.loginModel.value;
-
-    const resultado = await this.auth.signIn(credenciales.email!, credenciales.password!);
-    if(resultado.error){
-      console.log('Login falló, resultado.error');
-      return;
-    }
-    console.log('Login exitoso: ', resultado.data);
-    this.router.navigate(['/cartelera']);
+  ngOnInit(): void {
+    this.loginModel.valueChanges.subscribe(estado => console.log(estado));
   }
 
+  async onSubmit(event: Event) {
+    event.preventDefault();
+
+    this.errorMessage.set(null);
+
+    if (this.loginModel.invalid) {
+      this.errorMessage.set('Por favor, completa los campos correctamente.');
+      return;
+    }
+
+    const credenciales = this.loginModel.value;
+    const resultado = await this.auth.signIn(credenciales.email!, credenciales.password!);
+
+    if (resultado.error) {
+      this.errorMessage.set('El correo electrónico o la contraseña ingresados no son correctos.');
+      return;
+    }
+
+    console.log('Login exitoso: ', resultado.data);
+    this.router.navigate(['/cartelera']);
+    }  
 }

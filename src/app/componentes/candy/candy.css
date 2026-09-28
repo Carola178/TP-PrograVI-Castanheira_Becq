@@ -196,3 +196,36 @@
 .btn-agregar:hover {
   background-color: #b30000;
 }
+
+.barra-acciones-candy {
+  display: flex;
+  justify-content: center; 
+  width: 100%;
+  margin-top: 2rem;
+  margin-bottom: 2rem; 
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+.btn-continuar-pago {
+  background-color: #8b0000;
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  max-width: 320px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-continuar-pago:hover {
+  background-color: #b30000;
+}
+
+.btn-continuar-pago:active {
+  transform: scale(0.98);
+}

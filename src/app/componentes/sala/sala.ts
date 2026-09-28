@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { SalaServicio } from '../../services/salaServicio';
 import { Butaca } from '../../models/butacaData';
+import { CompraServicio } from '../../services/compraServicio';
 
 @Component({
   selector: 'app-sala',
@@ -26,7 +27,8 @@ export class Sala implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router, // Inyección de Router agregada
+    private router: Router,
+    private compraServicio: CompraServicio,
     private salaServicio: SalaServicio,
     private cdr: ChangeDetectorRef
   ) {}
@@ -106,8 +108,15 @@ export class Sala implements OnInit, OnDestroy {
     try {
       await this.salaServicio.reservarButacas(this.funcionId, this.asientosSeleccionados);
       
+      if (typeof this.compraServicio.seleccionarAsientos === 'function') {
+        this.compraServicio.seleccionarAsientos(this.asientosSeleccionados);
+      } else {
+        this.compraServicio.asientosSeleccionados = this.asientosSeleccionados;
+      }
+
       this.router.navigate(['/candy']);
     } catch (err) {
+      console.error(err);
       alert('Ocurrió un error o algún asiento ya fue reservado.');
     }
   }

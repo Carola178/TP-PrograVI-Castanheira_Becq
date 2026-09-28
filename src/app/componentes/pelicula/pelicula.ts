@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 import { PeliculaData } from '../../models/peliculaData';
 import { PeliculaServicio } from '../../services/peliculaServicio';
+import { CompraServicio } from '../../services/compraServicio'; 
 
 @Component({
   selector: 'app-pelicula',
@@ -17,7 +18,9 @@ export class Pelicula implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router, 
     private peliculaServicio: PeliculaServicio,
+    private compraServicio: CompraServicio,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -28,5 +31,12 @@ export class Pelicula implements OnInit {
     }
     this.cargando = false;
     this.cdr.detectChanges(); 
+  }
+
+  iniciarCompra(): void {
+    if (this.pelicula) {
+      this.compraServicio.seleccionarFuncion(this.pelicula);
+      this.router.navigate(['/sala', this.pelicula.id]); 
+    }
   }
 }

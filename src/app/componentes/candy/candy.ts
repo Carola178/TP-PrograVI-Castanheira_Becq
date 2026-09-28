@@ -1,7 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { ProductosServicio } from '../../services/productosServicio';
+import { CompraServicio } from '../../services/compraServicio';
 
 @Component({
   selector: 'app-candy',
@@ -17,6 +20,8 @@ export class Candy implements OnInit {
 
   constructor(
     private productosServicio: ProductosServicio,
+    public compraServicio: CompraServicio, 
+    private router: Router,                
     private cdr: ChangeDetectorRef 
   ) {}
 
@@ -24,7 +29,6 @@ export class Candy implements OnInit {
     try {
       const data = await this.productosServicio.getProductos();
       this.productosCandy = data || [];
-      
       this.cdr.detectChanges(); 
     } catch (error) {
       console.error('Error al cargar productos:', error);
@@ -47,5 +51,24 @@ export class Candy implements OnInit {
     return this.productosCandy.filter(p => 
       p.categoria?.toLowerCase().trim() === this.categoriaSeleccionada.toLowerCase().trim()
     );
+  }
+
+  agregarCandy(producto: any) {
+    this.compraServicio.agregarProductoCandy({
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      cantidad: 1
+    });
+  }
+
+  obtenerCantidadCarrito(productoId: any): number {
+    const resumen = this.compraServicio.getResumenCompra();
+    const item = (resumen?.candy || []).find((p: any) => p.id === productoId);
+    return item?.cantidad ?? 0; 
+  }
+
+  IrAlPago() {
+    this.router.navigate(['/pago']);
   }
 }

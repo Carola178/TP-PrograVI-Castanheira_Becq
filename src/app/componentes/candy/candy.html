@@ -9,10 +9,8 @@
     <div class="grid-combos">
       @for (combo of ofertasSemanales; track combo.id) {
         <article class="card-candy combo-especial">
-          <!-- Corregido: descuento_semanal -->
           <span class="badge-oferta" *ngIf="combo.descuento_semanal">{{ combo.descuento_semanal }}</span>
           
-          <!-- Corregido: imagen_url -->
           <img [src]="combo.imagen_url" [alt]="combo.nombre">
           
           <div class="card-body">
@@ -24,14 +22,18 @@
               <span class="puntos" *ngIf="combo.puntos_canje">Puntuación: {{ combo.puntos_canje }} pts</span>
             </div>
 
-            <button class="btn-agregar">Agregar al carrito</button>
+            <button class="btn-agregar" (click)="agregarCandy(combo)">
+              Agregar al carrito
+              <span *ngIf="obtenerCantidadCarrito(combo.id) > 0">
+                ({{ obtenerCantidadCarrito(combo.id) }})
+              </span>
+            </button>
           </div>
         </article>
       }
     </div>
   </section>
 
-  <!-- PRODUCTOS GENERALES -->
   <section class="seccion-productos">
     <div class="header-productos">
       <h2>Dulces y Bebidas</h2>
@@ -64,11 +66,20 @@
               <span class="puntos" *ngIf="prod.puntos_canje">⭐ {{ prod.puntos_canje }} pts</span>
             </div>
 
-            <button class="btn-agregar">Agregar al carrito</button>
+            <button class="btn-agregar" (click)="agregarCandy(prod)">
+              Agregar al carrito
+              <span *ngIf="obtenerCantidadCarrito(prod.id) > 0">
+                ({{ obtenerCantidadCarrito(prod.id) }})
+              </span>
+            </button>
           </div>
         </article>
       }
     </div>
   </section>
+
+  <div class="barra-acciones-candy">
+    <button class="btn-continuar-pago" (click)="IrAlPago()">Continuar con la compra</button>
+  </div>
 
 </section>

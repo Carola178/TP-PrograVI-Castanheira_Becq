@@ -35,8 +35,9 @@
             <p *ngIf="pelicula.precioPreventa">Precio especial: ${{ pelicula.precioPreventa }}</p>
           </div>
         }
+        
+        <button (click)="iniciarCompra()">Comprar Entradas</button>
 
-        <button class="btn-comprar-ticket" [routerLink]="['/sala', pelicula?.id || 1]">Iniciar compra</button>
       </div>
     </div>
   } @else {
