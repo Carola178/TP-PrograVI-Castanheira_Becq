@@ -109,7 +109,33 @@
   object-fit: cover;
   display: block;
 }
+/* Asegura que el contenedor de la película funcione como referencia de posición
+.card-pelicula {
+  position: relative;
+  overflow: hidden;
+} */
 
+/* Estilo para el badge +18 estilo "Píldora / Etiqueta" */
+.badge-18 {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #00bcd4; /* Color Turquesa/Cian como el de tu imagen */
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+
+/* En caso de coincidir con badge de preventa, ajusta el desfase vertical */
+.badge-preventa + .badge-18 {
+  top: 45px;
+}
 .badge-top,
 .badge-preventa {
   position: absolute;

@@ -1,13 +1,17 @@
 export interface PeliculaData {
     id: number;
-    created_at?: string;
     titulo: string;
-    sinopsis?: string;
-    duracionMinutos?: number;
-    imagenUrl?: string;
-    generos?: string;
-    esMasVendida?: boolean;
+    sinopsis: string;
+    duracionMinutos: number;
+    imagenUrl: string;
+    generos: string;
+    EsteProximamente?: boolean;
+    fechaEstreno?: string;
     enPreventa?: boolean;
+    precio?: number;
     precioPreventa?: number;
+    sala?: string;
+    esMasVendida?: boolean;
     promedioEstrellas?: number;
+    esMayor18?: boolean;
 }

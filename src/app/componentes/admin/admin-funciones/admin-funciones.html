@@ -1,0 +1,137 @@
+<div class="admin-container">
+    <h2>Gestión de Cartelera y Películas</h2>
+
+    <!-- Alertas -->
+    <div *ngIf="mensajeRespuesta" [ngClass]="mensajeRespuesta.exito ? 'alert alert-success' : 'alert alert-danger'">
+        {{ mensajeRespuesta.texto }}
+    </div>
+
+    <!-- Formulario -->
+    <div class="card-item">
+        <div class="card-body">
+            <h4>Agregar Nueva Película</h4>
+            <form (ngSubmit)="guardarPelicula()" class="grid-form">
+                
+                <!-- Título -->
+                <div class="form-group">
+                    <label>Título (*)</label>
+                    <input type="text" [(ngModel)]="nuevaPelicula.titulo" name="titulo" required />
+                </div>
+
+                <!-- Duración -->
+                <div class="form-group">
+                    <label>Duración (min) (*)</label>
+                    <input type="number" [(ngModel)]="nuevaPelicula.duracionMinutos" name="duracionMinutos" required />
+                </div>
+
+                <!-- Géneros -->
+                <div class="form-group">
+                    <label>Géneros</label>
+                    <input type="text" [(ngModel)]="nuevaPelicula.generos" name="generos" placeholder="Acción, Drama" />
+                </div>
+
+                <!-- Sala -->
+                <div class="form-group">
+                    <label>Sala</label>
+                    <select [(ngModel)]="nuevaPelicula.sala" name="sala">
+                        <option value="sala 1">Sala 1</option>
+                        <option value="sala 2">Sala 2</option>
+                        <option value="sala 3">Sala 3</option>
+                    </select>
+                </div>
+
+                <!-- Fecha de Estreno -->
+                <div class="form-group">
+                    <label>Fecha de Estreno</label>
+                    <input type="date" [(ngModel)]="nuevaPelicula.fechaEstreno" name="fechaEstreno" />
+                </div>
+
+                <!-- Precio Base -->
+                <div class="form-group">
+                    <label>Precio ($)</label>
+                    <input type="number" [(ngModel)]="nuevaPelicula.precio" name="precio" />
+                </div>
+
+                <!-- Checkbox Preventa -->
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="nuevaPelicula.enPreventa" name="enPreventa" id="chkPreventa" />
+                        ¿En Preventa?
+                    </label>
+                </div>
+
+                <!-- Precio Preventa -->
+                <div class="form-group" *ngIf="nuevaPelicula.enPreventa">
+                    <label>Precio Preventa ($)</label>
+                    <input type="number" [(ngModel)]="nuevaPelicula.precioPreventa" name="precioPreventa" />
+                </div>
+
+                <!-- Checkbox Próximamente -->
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="nuevaPelicula.EsteProximamente" name="EsteProximamente" id="chkProximamente" />
+                        ¿Este Próximamente?
+                    </label>
+                </div>
+
+                <!-- Imagen -->
+                <div class="form-group full-width">
+                    <label>URL Imagen de Portada</label>
+                    <input type="text" [(ngModel)]="nuevaPelicula.imagenUrl" name="imagenUrl" placeholder="https://..." />
+                </div>
+
+                <!-- Sinopsis -->
+                <div class="form-group full-width">
+                    <label>Sinopsis</label>
+                    <textarea rows="3" [(ngModel)]="nuevaPelicula.sinopsis" name="sinopsis"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="nuevaPelicula.esMayor18" name="esMayor18" id="chkMayor18" />Apta solo para +18?
+                    </label>
+                    </div>
+
+                <!-- Botón Submit -->
+                <button type="submit" class="btn-primary" [disabled]="cargando">
+                    {{ cargando ? 'Guardando...' : 'Guardar en Cartelera' }}
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Películas -->
+    <div class="card-item" style="margin-top: 20px;">
+        <div class="card-body">
+            <h4>Películas Actuales en Cartelera</h4>
+            <table class="data-table" *ngIf="peliculas.length > 0; else sinPeliculas">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Sala</th>
+                        <th>Estreno</th>
+                        <th>Precio</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let peli of peliculas">
+                        <td>{{ peli.id }}</td>
+                        <td>{{ peli.titulo }}</td>
+                        <td><span class="badge-sala">{{ peli.sala }}</span></td>
+                        <td>{{ peli.fechaEstreno }}</td>
+                        <td>${{ peli.precio }}</td>
+                        <td>
+                            <button class="btn-danger" (click)="borrarPelicula(peli.id)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <ng-template #sinPeliculas>
+                <p style="color: #6c757d; margin-top: 10px;">No hay películas registradas en la base de datos.</p>
+            </ng-template>
+        </div>
+    </div>
+</div>

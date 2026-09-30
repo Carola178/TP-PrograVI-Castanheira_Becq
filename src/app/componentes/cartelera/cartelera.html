@@ -15,7 +15,7 @@
     </select>
   </div>
 
-<!-- Top 3 peliculas -->
+  <!-- Top 3 películas -->
   @if (!busqueda && generoSeleccionado === 'Todos') {
     <section class="destacados-section">
       <h2>Películas destacadas</h2>
@@ -24,6 +24,9 @@
         @for (pelicula of masVendidas; track pelicula.id) {
           <article class="card-pelicula destacada">
             <span class="badge-top">TOP 3 VENDIDAS</span>
+            
+            <span class="badge-18" *ngIf="pelicula.esMayor18">+18 Solo Mayores</span>
+            
             <img [src]="pelicula.imagenUrl" [alt]="pelicula.titulo">
             
             <div class="card-body">
@@ -35,7 +38,7 @@
               <p class="duracion" *ngIf="pelicula.duracionMinutos">Duración: {{ pelicula.duracionMinutos }} min</p>
               <p class="sinopsis">{{ pelicula.sinopsis }}</p>
               
-              <a [routerLink]="['/cartelera/pelicula', pelicula.id]" class="btn-comprar">Ver detalle</a>
+              <button (click)="seleccionarPelicula(pelicula, false)" class="btn-comprar">Ver detalle</button>
             </div>
           </article>
         }
@@ -43,6 +46,7 @@
     </section>
   }
 
+  <!-- Todas las Películas -->
   <section class="general-section">
     <h2>Todas las Películas</h2>
     
@@ -52,6 +56,8 @@
           @if (pelicula.enPreventa) {
             <span class="badge-preventa">Preventa Exclusiva</span>
           }
+          <span class="badge-18" *ngIf="pelicula.esMayor18">+18 Solo Mayores</span>
+
           <img [src]="pelicula.imagenUrl" [alt]="pelicula.titulo">
           
           <div class="card-body">
@@ -67,7 +73,7 @@
               <p class="precio-preventa">Precio Preventa: ${{ pelicula.precioPreventa }}</p>
             }
 
-            <a [routerLink]="['/cartelera/pelicula', pelicula.id]" class="btn-comprar">Ver detalle</a>
+            <button (click)="seleccionarPelicula(pelicula, false)" class="btn-comprar">Ver detalle</button>
           </div>
         </article>
       }

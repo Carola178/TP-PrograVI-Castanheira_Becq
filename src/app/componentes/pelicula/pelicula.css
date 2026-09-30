@@ -82,11 +82,10 @@
     font-weight: bold;
     color: #ffffff;
 }
-
 .btn-comprar-ticket {
     align-self: flex-start;
     background-color: #e50914;
-    color: white;
+    color: #ffffff;
     border: none;
     padding: 0.8rem 1.8rem;
     font-size: 1rem;
@@ -104,33 +103,4 @@
 
 .btn-comprar-ticket:active {
     transform: translateY(0);
-}
-
-.loading, .error {
-    text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #ffffff;
-}
-
-@media (max-width: 768px) {
-.detalle-card {
-    flex-direction: column;
-    align-items: center;
-    padding: 1.5rem;
-}
-
-.poster-detalle {
-    width: 220px;
-    }
-
-.detalle-info h1 {
-    font-size: 1.8rem;
-    text-align: center;
-    }
-
-.btn-comprar-ticket {
-    width: 100%;
-    text-align: center;
-    }
 }

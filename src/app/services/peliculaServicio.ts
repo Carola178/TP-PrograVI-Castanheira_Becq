@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { ReplaySubject, Observable } from 'rxjs';
 import { enviroment } from '../enviroments/enviroments';
 import { PeliculaData } from '../models/peliculaData';
 
@@ -8,6 +9,9 @@ import { PeliculaData } from '../models/peliculaData';
 })
 export class PeliculaServicio { 
   private supabase: SupabaseClient;
+
+  private peliculasSubject = new ReplaySubject<PeliculaData[]>(1);
+  public peliculas$: Observable<PeliculaData[]> = this.peliculasSubject.asObservable();
 
   constructor() {
     this.supabase = createClient(
@@ -22,10 +26,29 @@ export class PeliculaServicio {
       .select('*');
 
     if (error) {
-      console.error('Error al cargar películas:', error);
+      console.error('Error al cargar películas desde Supabase:', error);
       return [];
     }
-    return data as PeliculaData[];
+
+    const listaFormateada: PeliculaData[] = (data || []).map(p => ({
+      id: p.id,
+      titulo: p.titulo,
+      sinopsis: p.sinopsis,
+      duracionMinutos: p.duracionMinutos ?? p.duracion_minutos,
+      imagenUrl: p.imagenUrl ?? p.imagen_url,
+      generos: p.generos,
+      EsteProximamente: p.EsteProximamente,
+      fechaEstreno: p.fechaEstreno,
+      enPreventa: p.enPreventa,
+      precio: p.precio,
+      precioPreventa: p.precioPreventa,
+      sala: p.sala,
+      // Mapeamos ambas variantes (camelCase y snake_case)
+      esMayor18: p.esMayor18 ?? p.es_mayor_18 ?? false 
+    }));
+
+    this.peliculasSubject.next(listaFormateada);
+    return listaFormateada;
   }
 
   async getPeliculaPorId(id: string | number): Promise<PeliculaData | null> {
@@ -47,10 +70,59 @@ export class PeliculaServicio {
       duracionMinutos: data.duracionMinutos ?? data.duracion_minutos,
       imagenUrl: data.imagenUrl ?? data.imagen_url,
       generos: data.generos,
-      esMasVendida: data.esMasVendida ?? data.es_mas_vendida,
-      enPreventa: data.enPreventa ?? data.en_preventa,
-      precioPreventa: data.precioPreventa ?? data.precio_preventa,
-      promedioEstrellas: data.promedioEstrellas ?? data.promedio_estrellas
+      EsteProximamente: data.EsteProximamente,
+      fechaEstreno: data.fechaEstreno,
+      enPreventa: data.enPreventa,
+      precio: data.precio,
+      precioPreventa: data.precioPreventa,
+      sala: data.sala,
+      esMayor18: data.esMayor18 ?? false
     };
+  }
+
+  async crearPelicula(nuevaPeli: Omit<PeliculaData, 'id'>): Promise<PeliculaData | null> {
+    const payload = {
+      titulo: nuevaPeli.titulo || 'Sin título',
+      sinopsis: nuevaPeli.sinopsis || '',
+      duracionMinutos: Number(nuevaPeli.duracionMinutos) || 120,
+      imagenUrl: nuevaPeli.imagenUrl || '',
+      generos: nuevaPeli.generos || '',
+      EsteProximamente: Boolean(nuevaPeli.EsteProximamente),
+      fechaEstreno: nuevaPeli.fechaEstreno || new Date().toISOString().split('T')[0],
+      enPreventa: Boolean(nuevaPeli.enPreventa),
+      precio: Number(nuevaPeli.precio) || 35000,
+      precioPreventa: Number(nuevaPeli.precioPreventa) || 0,
+      sala: nuevaPeli.sala || 'sala 1',
+      esMayor18: Boolean(nuevaPeli.esMayor18),
+    };
+
+    const { data, error } = await this.supabase
+      .from('Peliculas')
+      .insert([payload])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error al registrar película en Supabase:', error);
+      return null;
+    }
+
+    await this.getPeliculas();
+    return data as PeliculaData;
+  }
+
+  async eliminarPelicula(id: number): Promise<boolean> {
+    const { error } = await this.supabase
+      .from('Peliculas')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al eliminar película:', error);
+      return false;
+    }
+
+    await this.getPeliculas();
+    return true;
   }
 }
