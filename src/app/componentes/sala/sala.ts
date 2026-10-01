@@ -9,14 +9,14 @@ import { CompraServicio } from '../../services/compraServicio';
 @Component({
   selector: 'app-sala',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './sala.html',
   styleUrl: './sala.css'
 })
 export class Sala implements OnInit, OnDestroy {
   funcionId: number = 1;
   filasLetras: string[] = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T'];
-  
+
   bloqueIzq: number[] = [1, 2, 3, 4];
   bloqueCentro: number[] = Array.from({ length: 20 }, (_, i) => i + 6);
   bloqueDer: number[] = [27, 28, 29, 30];
@@ -24,6 +24,11 @@ export class Sala implements OnInit, OnDestroy {
   matrizButacas: { [key: string]: Butaca } = {};
   asientosSeleccionados: Butaca[] = [];
   private canalRealtime!: RealtimeChannel;
+
+  // Precios base
+  readonly PRECIO_BASE = 25000;
+  readonly RECARGO_VIP = 40000;
+  readonly PRECIO_DISCAPACIDAD = 20000;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,23 +47,54 @@ export class Sala implements OnInit, OnDestroy {
     this.iniciarRealtime();
   }
 
-  inicializarMapa() {
-    const filasVip = ['R', 'S', 'T']; 
-    
-    this.filasLetras.forEach(fila => {
-      const esVip = filasVip.includes(fila);
-      const totalCols = [...this.bloqueIzq, ...this.bloqueCentro, ...this.bloqueDer];
+inicializarMapa() {
+  const filasVip = ['R', 'S', 'T']; 
+
+  const filaDiscapacidad = 'J';
+  const esDisc = (fila: string, col: number) => {
+    return fila === filaDiscapacidad && (col >= 10 && col <= 20);
+  };
+
+  this.filasLetras.forEach(fila => {
+    const esVip = filasVip.includes(fila);
+    const totalCols = [...this.bloqueIzq, ...this.bloqueCentro, ...this.bloqueDer];
+
+    totalCols.forEach(col => {
+      const key = `${fila}-${col}`;
+      const esDiscapacidad = esDisc(fila, col);
       
-      totalCols.forEach(col => {
-        const key = `${fila}-${col}`;
-        this.matrizButacas[key] = {
-          fila,
-          columna: col,
-          esVip,
-          ocupada: false
-        };
-      });
+      let tipo: 'COMUN' | 'VIP' | 'DISCAPACIDAD' = 'COMUN';
+      if (esVip) tipo = 'VIP';
+      if (esDiscapacidad) tipo = 'DISCAPACIDAD';
+
+      const precio = this.calcularPrecioButaca(tipo);
+
+      this.matrizButacas[key] = {
+        fila,
+        columna: col,
+        esVip,
+        esDiscapacidad,
+        tipo,
+        precio,
+        ocupada: false
+      };
     });
+  });
+}
+
+  calcularPrecioButaca(tipo: 'COMUN' | 'VIP' | 'DISCAPACIDAD'): number {
+    switch (tipo) {
+      case 'VIP':
+        return this.PRECIO_BASE + this.RECARGO_VIP;
+      case 'DISCAPACIDAD':
+        return this.PRECIO_DISCAPACIDAD;
+      default:
+        return this.PRECIO_BASE;
+    }
+  }
+
+  get totalPrecio(): number {
+    return this.asientosSeleccionados.reduce((total, b) => total + (b.precio || this.PRECIO_BASE), 0);
   }
 
   async cargarReservasExistentes() {
@@ -77,7 +113,7 @@ export class Sala implements OnInit, OnDestroy {
       if (payload.eventType === 'INSERT') {
         const nueva = payload.new;
         const key = `${nueva.fila}-${nueva.columna}`;
-        
+
         if (this.matrizButacas[key]) {
           this.matrizButacas[key].ocupada = true;
           this.asientosSeleccionados = this.asientosSeleccionados.filter(
@@ -107,7 +143,7 @@ export class Sala implements OnInit, OnDestroy {
 
     try {
       await this.salaServicio.reservarButacas(this.funcionId, this.asientosSeleccionados);
-      
+
       if (typeof this.compraServicio.seleccionarAsientos === 'function') {
         this.compraServicio.seleccionarAsientos(this.asientosSeleccionados);
       } else {

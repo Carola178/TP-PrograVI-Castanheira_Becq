@@ -55,9 +55,7 @@ export class Candy implements OnInit {
 
   agregarCandy(producto: any) {
     this.compraServicio.agregarProductoCandy({
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
+      ...producto,
       cantidad: 1
     });
   }

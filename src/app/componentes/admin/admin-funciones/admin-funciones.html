@@ -9,7 +9,7 @@
     <!-- Formulario -->
     <div class="card-item">
         <div class="card-body">
-            <h4>Agregar Nueva Película</h4>
+            <h4>{{ editandoId ? 'Editar Película' : 'Agregar Nueva Película' }}</h4>
             <form (ngSubmit)="guardarPelicula()" class="grid-form">
                 
                 <!-- Título -->
@@ -70,7 +70,7 @@
                 <div class="form-group">
                     <label>
                         <input type="checkbox" [(ngModel)]="nuevaPelicula.EsteProximamente" name="EsteProximamente" id="chkProximamente" />
-                        ¿Este Próximamente?
+                        ¿Estreno Próximamente?
                     </label>
                 </div>
 
@@ -88,14 +88,19 @@
 
                 <div class="form-group">
                     <label>
-                        <input type="checkbox" [(ngModel)]="nuevaPelicula.esMayor18" name="esMayor18" id="chkMayor18" />Apta solo para +18?
+                        <input type="checkbox" [(ngModel)]="nuevaPelicula.esMayor18" name="esMayor18" id="chkMayor18" />¿Apta solo para +18?
                     </label>
-                    </div>
+                </div>
 
-                <!-- Botón Submit -->
-                <button type="submit" class="btn-primary" [disabled]="cargando">
-                    {{ cargando ? 'Guardando...' : 'Guardar en Cartelera' }}
-                </button>
+                <!-- Botones de Acción Formulario -->
+                <div class="form-group full-width" style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-primary" [disabled]="cargando">
+                        {{ cargando ? 'Guardando...' : (editandoId ? 'Actualizar Película' : 'Guardar en Cartelera') }}
+                    </button>
+                    <button type="button" class="btn-secondary" *ngIf="editandoId" (click)="cancelarEdicion()">
+                        Cancelar Edición
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -123,6 +128,9 @@
                         <td>{{ peli.fechaEstreno }}</td>
                         <td>${{ peli.precio }}</td>
                         <td>
+                            <!-- Botón Modificar / Editar -->
+                            <button class="btn-warning" (click)="seleccionarParaEditar(peli)" style="margin-right: 5px;">Modificar</button>
+                            <!-- Botón Eliminar -->
                             <button class="btn-danger" (click)="borrarPelicula(peli.id)">Eliminar</button>
                         </td>
                     </tr>

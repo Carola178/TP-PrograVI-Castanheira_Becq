@@ -1,0 +1,163 @@
+/* Contenedor principal alineado con la temática del admin */
+.admin-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Grilla del formulario */
+.grid-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #ffffff; /* Texto legible sobre el fondo oscuro general */
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Checkbox estilizado dentro de la grilla */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Botón Guardar / Principal */
+.btn-primary {
+    grid-column: 1 / -1;
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #218838;
+}
+
+/* Contenedor de acciones del formulario */
+.form-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+}
+
+/* Tabla de datos */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background-color: #ffffff; /* Fondo blanco para la tabla */
+}
+
+.data-table th, 
+.data-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    color: #333333; /* Texto oscuro visible dentro de la tabla */
+}
+
+.data-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+/* Badges / Etiquetas */
+.badge-categoria {
+    background-color: #17a2b8;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.badge-combo {
+    background-color: #f39c12;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* Mensajes de Alerta */
+.alert {
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+.alert-success { background-color: #d4edda; color: #155724; }
+.alert-danger { background-color: #f8d7da; color: #721c24; }
+
+/* Botones Editar y Eliminar */
+.btn-warning,
+.btn-danger {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-right: 10px;
+}
+
+/* Botón Editar (Naranja) */
+.btn-warning {
+    background-color: #f39c12;
+    color: #ffffff;
+}
+
+.btn-warning:hover {
+    background-color: #d68910;
+}
+
+/* Botón Eliminar (Rojo) */
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+}
+
+/* Efecto al presionar cualquier botón */
+.btn-warning:active,
+.btn-danger:active,
+.btn-primary:active {
+    transform: scale(0.98);
+}

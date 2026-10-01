@@ -1,114 +1,222 @@
+:host {
+  display: block;
+  background-color: #121212;
+  min-height: 100vh;
+}
+
 .sala-container {
-    background-color: #0d0d0d;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: monospace, sans-serif;
-    color: #ffffff;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  color: #ffffff;
+  padding: 30px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.mapa-asientos {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+/* Pantalla de Cine Curvada */
+.pantalla-container {
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  perspective: 400px;
 }
 
+.pantalla {
+  width: 100%;
+  height: 12px;
+  background: linear-gradient(to bottom, #ffffff, #888888);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35);
+  transform: rotateX(-10deg);
+}
+
+.pantalla-texto {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #777;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+/* Leyenda superior */
+.leyenda-butacas {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  background-color: #1e1e1e;
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: 1px solid #2a2a2a;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.item-leyenda {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* Grilla del mapa de la Sala */
+.mapa-sala {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  border: 1px solid #2a2a2a;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Fila individual */
 .fila {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .letra-fila {
-    width: 24px;
-    color: #ff2a6d;
-    font-weight: bold;
-    text-align: center;
-    font-size: 0.9rem;
+  width: 24px;
+  font-weight: bold;
+  color: #888;
+  text-align: center;
+  font-size: 13px;
 }
 
-.bloque {
-    display: flex;
-    gap: 3px;
-    border: 1px solid #333;
-    padding: 2px;
-    background-color: #000;
+.bloque-asientos {
+  display: flex;
+  gap: 6px;
 }
 
-.pasillo-vertical {
-    width: 18px;
+/* Pasillos entre bloques de butacas */
+.pasillo {
+  width: 20px;
 }
 
-.pasillo-horizontal {
-    height: 20px;
-}
-
+/* Estilos base de botones de asientos */
 .seat {
-    width: 22px;
-    height: 22px;
-    background-color: #000000;
-    border: 1px solid #444;
-    color: #ffffff;
-    font-size: 0.65rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
+  width: 30px;
+  height: 32px;
+  border-radius: 6px 6px 3px 3px;
+  border: 1px solid #3d3d3d;
+  background-color: #333333; /* Común (Gris neutro) */
+  color: #d1d1d1;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.3);
+  user-select: none;
 }
 
-.seat.seleccionada {
-    background-color: #00ff66 !important;
-    color: #000000 !important;
-    border-color: #00ff66 !important;
+.seat:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.08);
+  filter: brightness(1.2);
+  z-index: 2;
 }
 
+/* Butaca VIP (Dorado elegante) */
 .seat.vip {
-    border: 1px solid #ffe600;
-    color: #ffe600;
+  background: linear-gradient(135deg, #f39c12, #d35400) !important;
+  color: #ffffff !important;
+  font-weight: bold;
+  border-color: #e67e22 !important;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.3), 0 0 6px rgba(243, 156, 18, 0.4);
 }
 
-.seat.vip.seleccionada {
-    background-color: #00ff66 !important;
-    color: #000000 !important;
+/* Butaca DISCAPACIDAD (Azul accesible) */
+.seat.discapacidad {
+  background: linear-gradient(135deg, #007bff, #0056b3) !important;
+  color: #ffffff !important;
+  border-color: #0056b3 !important;
 }
 
+/* SELECCIONADA (Verde neón activo) */
+.seat.seleccionada {
+  background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+  color: #ffffff !important;
+  border-color: #2ecc71 !important;
+  box-shadow: 0 0 12px rgba(46, 204, 113, 0.8) !important;
+  transform: translateY(-2px);
+}
+
+/* OCUPADA (Deshabilitada/Sin vida) */
 .seat.ocupada {
-    background-color: #222222 !important;
-    border-color: #111111 !important;
-    color: #444444 !important;
-    cursor: not-allowed;
+  background-color: #222222 !important;
+  color: #555555 !important;
+  border-color: #1a1a1a !important;
+  cursor: not-allowed;
+  opacity: 0.5;
+  box-shadow: none;
 }
 
+/* Resumen inferior */
 .resumen-seleccion {
-    margin-top: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  background-color: #1e1e1e;
+  padding: 20px 32px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  border: 1px solid #2a2a2a;
+  width: 100%;
+  max-width: 650px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-.resumen-seleccion p {
-    color: #ffe600;
-    font-size: 1.1rem;
-    font-weight: bold;
+.resumen-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resumen-info span {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.resumen-info strong {
+  font-size: 20px;
+  color: #2a8f54;
 }
 
 .btn-confirmar {
-    background-color: #ff0055;
-    color: #ffffff;
-    border: 2px solid #00ffcc;
-    padding: 0.8rem 2rem;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    letter-spacing: 1px;
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
-    transition: transform 0.1s ease;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
 
-.btn-confirmar:hover {
-    transform: scale(1.05);
+.btn-confirmar:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(46, 204, 113, 0.5);
+}
+
+.btn-confirmar:disabled {
+  background: #333333;
+  color: #666666;
+  cursor: not-allowed;
+  box-shadow: none;
 }

@@ -111,6 +111,42 @@ export class PeliculaServicio {
     return data as PeliculaData;
   }
 
+  async actualizarPelicula(pelicula: PeliculaData): Promise<boolean> {
+    if (!pelicula.id) {
+      console.error('No se proporcionó un ID válido para actualizar');
+      return false;
+    }
+
+    const { id, ...datosSinId } = pelicula;
+
+    const payload = {
+      titulo: datosSinId.titulo || 'Sin título',
+      sinopsis: datosSinId.sinopsis || '',
+      duracionMinutos: Number(datosSinId.duracionMinutos) || 120,
+      imagenUrl: datosSinId.imagenUrl || '',
+      generos: datosSinId.generos || '',
+      EsteProximamente: Boolean(datosSinId.EsteProximamente),
+      fechaEstreno: datosSinId.fechaEstreno || new Date().toISOString().split('T')[0],
+      enPreventa: Boolean(datosSinId.enPreventa),
+      precio: Number(datosSinId.precio) || 35000,
+      precioPreventa: Number(datosSinId.precioPreventa) || 0,
+      sala: datosSinId.sala || 'sala 1',
+      esMayor18: Boolean(datosSinId.esMayor18),
+    };
+
+    const { data, error } = await this.supabase
+      .from('Peliculas') // Reemplaza por el nombre exacto de tu tabla en Supabase
+      .update(payload)
+      .eq('id', Number(id)); // Nos aseguramos de que el ID sea un número puro
+
+    if (error) {
+      console.error('Error al actualizar película:', error);
+      return false;
+    }
+
+    return true;
+  }
+
   async eliminarPelicula(id: number): Promise<boolean> {
     const { error } = await this.supabase
       .from('Peliculas')

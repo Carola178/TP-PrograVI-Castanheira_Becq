@@ -1,4 +1,4 @@
-export const enviroment = {
+export const environment = {
     production: false,
     supabaseUrl: 'https://mcajrberpesihhollqhu.supabase.co',
     supabasePublishableKey: 'sb_publishable_hG4tO0Qw9KUESwqeV-h90A_CLnpEF0g'

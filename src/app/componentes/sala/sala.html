@@ -1,80 +1,109 @@
 <div class="sala-container">
-<div class="mapa-asientos">
-    @for (fila of filasLetras; track fila) {
-      <div class="pasillo-horizontal" *ngIf="fila === 'K'"></div>
+    
+    <!-- Leyenda de Butacas -->
+    <div class="leyenda-butacas">
+        <div class="item-leyenda"><span class="seat comun"></span> Común (${{ PRECIO_BASE }})</div>
+        <div class="item-leyenda"><span class="seat vip"></span> VIP (${{ PRECIO_BASE + RECARGO_VIP }})</div>
+        <div class="item-leyenda"><span class="seat discapacidad">♿</span> Discapacidad (${{ PRECIO_DISCAPACIDAD }})</div>
+        <div class="item-leyenda"><span class="seat ocupada"></span> Ocupada</div>
+        <div class="item-leyenda"><span class="seat seleccionada"></span> Seleccionada</div>
+    </div>
+
+    <div class="mapa-asientos">
+        @for (fila of filasLetras; track fila) {
+        <div class="pasillo-horizontal" *ngIf="fila === 'K'"></div>
 
         <div class="fila">
-        <span class="letra-fila">{{ fila }}</span>
+            <span class="letra-fila">{{ fila }}</span>
 
-        <div class="bloque">
+            <!-- Bloque Izquierdo -->
+            <div class="bloque">
             @for (col of bloqueIzq; track col) {
-            @let b = matrizButacas[fila + '-' + col];
-            <button 
+                @let b = matrizButacas[fila + '-' + col];
+                <button 
                 class="seat" 
                 [ngClass]="{
-                'vip': b?.esVip,
-                'ocupada': b?.ocupada,
-                'seleccionada': b?.seleccionada
+                    'vip': b?.esVip,
+                    'discapacidad': b?.esDiscapacidad,
+                    'ocupada': b?.ocupada,
+                    'seleccionada': b?.seleccionada
                 }"
                 [disabled]="b?.ocupada"
-                (click)="toggleSeleccion(b)">
-                {{ col }}
-            </button>
+                (click)="toggleSeleccion(b)"
+                [title]="b?.esDiscapacidad ? 'Butaca Discapacidad' : (b?.esVip ? 'Butaca VIP' : 'Butaca Común')">
+                {{ b?.esDiscapacidad ? '♿' : col }}
+                </button>
             }
-        </div>
+            </div>
 
-        <div class="pasillo-vertical"></div>
+            <div class="pasillo-vertical"></div>
 
-        <div class="bloque centro">
+            <!-- Bloque Centro -->
+            <div class="bloque centro">
             @for (col of bloqueCentro; track col) {
-            @let b = matrizButacas[fila + '-' + col];
-            <button 
+                @let b = matrizButacas[fila + '-' + col];
+                <button 
                 class="seat" 
                 [ngClass]="{
-                'vip': b?.esVip,
-                'ocupada': b?.ocupada,
-                'seleccionada': b?.seleccionada
+                    'vip': b?.esVip,
+                    'discapacidad': b?.esDiscapacidad,
+                    'ocupada': b?.ocupada,
+                    'seleccionada': b?.seleccionada
                 }"
                 [disabled]="b?.ocupada"
-                (click)="toggleSeleccion(b)">
-                {{ col }}
-            </button>
+                (click)="toggleSeleccion(b)"
+                [title]="b?.esDiscapacidad ? 'Butaca Discapacidad' : (b?.esVip ? 'Butaca VIP' : 'Butaca Común')">
+                {{ b?.esDiscapacidad ? '♿' : col }}
+                </button>
             }
-        </div>
+            </div>
 
-        <div class="pasillo-vertical"></div>
+            <div class="pasillo-vertical"></div>
 
-        <div class="bloque">
+            <!-- Bloque Derecho -->
+            <div class="bloque">
             @for (col of bloqueDer; track col) {
-            @let b = matrizButacas[fila + '-' + col];
-            <button 
+                @let b = matrizButacas[fila + '-' + col];
+                <button 
                 class="seat" 
                 [ngClass]="{
-                'vip': b?.esVip,
-                'ocupada': b?.ocupada,
-                'seleccionada': b?.seleccionada
+                    'vip': b?.esVip,
+                    'discapacidad': b?.esDiscapacidad,
+                    'ocupada': b?.ocupada,
+                    'seleccionada': b?.seleccionada
                 }"
                 [disabled]="b?.ocupada"
-                (click)="toggleSeleccion(b)">
-                {{ col }}
-            </button>
+                (click)="toggleSeleccion(b)"
+                [title]="b?.esDiscapacidad ? 'Butaca Discapacidad' : (b?.esVip ? 'Butaca VIP' : 'Butaca Común')">
+                {{ b?.esDiscapacidad ? '♿' : col }}
+                </button>
             }
-        </div>
+            </div>
 
-        <span class="letra-fila">{{ fila }}</span>
+            <span class="letra-fila">{{ fila }}</span>
         </div>
-    }
-</div>
-
-  <div class="resumen-seleccion" *ngIf="asientosSeleccionados.length > 0">
-    <p>Asientos seleccionados: 
-        <span>
-        @for (item of asientosSeleccionados; track $index) {
-            {{ item.fila }}-{{ item.columna }}{{ $last ? '' : ', ' }}
         }
-        </span>
-    </p>
-    <button class="btn-confirmar"(click)="confirmarReserva()" [disabled]="asientosSeleccionados.length === 0">Confirmar selección</button>
+    </div>
+
+    <!-- Resumen de Selección y Monto Total -->
+    <div class="resumen-seleccion" *ngIf="asientosSeleccionados.length > 0">
+        <div class="info-resumen">
+        <p><strong>Asientos seleccionados:</strong> 
+            <span>
+            @for (item of asientosSeleccionados; track $index) {
+                {{ item.fila }}-{{ item.columna }} ({{ item.tipo }}){{ $last ? '' : ', ' }}
+            }
+            </span>
+        </p>
+        <p class="monto-total"><strong>Total Entradas:</strong> ${{ totalPrecio | number:'1.0-2' }}</p>
+        </div>
+        
+        <button 
+        class="btn-confirmar"
+        (click)="confirmarReserva()" 
+        [disabled]="asientosSeleccionados.length === 0">
+        Confirmar selección (${{ totalPrecio | number:'1.0-2' }})
+        </button>
     </div>
 
 </div>
