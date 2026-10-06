@@ -15,6 +15,9 @@ import { CompraServicio } from '../../services/compraServicio';
 export class Pelicula implements OnInit {
   pelicula: PeliculaData | null = null;
   cargando: boolean = true;
+  
+  // Guardará el horario que el usuario elija en la vista
+  horarioSeleccionado: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,14 +31,27 @@ export class Pelicula implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.pelicula = await this.peliculaServicio.getPeliculaPorId(id);
+      
+      // Selecciona el primer horario por defecto si existen horarios
+      if (this.pelicula?.horarios && this.pelicula.horarios.length > 0) {
+        this.horarioSeleccionado = this.pelicula.horarios[0];
+      }
     }
     this.cargando = false;
     this.cdr.detectChanges(); 
   }
 
+  seleccionarHorario(horario: string): void {
+    this.horarioSeleccionado = horario;
+  }
+
   iniciarCompra(): void {
-    if (this.pelicula) {
-      this.compraServicio.seleccionarFuncion(this.pelicula);
+    if (this.pelicula && this.horarioSeleccionado) {
+      // Pasamos la película junto con el horario elegido al servicio de compra
+      this.compraServicio.seleccionarFuncion({
+        ...this.pelicula,
+        horarioElegido: this.horarioSeleccionado
+      });
       this.router.navigate(['/sala', this.pelicula.id]); 
     }
   }

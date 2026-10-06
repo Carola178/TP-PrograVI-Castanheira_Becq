@@ -1,113 +1,77 @@
-<section class="pago-container">
+<div class="pago-container">
     <h2>Resumen de Compra y Pago</h2>
 
-    <div class="resumen-seccion">
+    <div class="resumen-grid">
+        <!-- Columna Película -->
+        <div class="card-info">
+        <h3>Película seleccionada:</h3>
+        <h4>{{ resumen?.pelicula?.titulo }}</h4>
+        <p><strong>Duración:</strong> {{ resumen?.pelicula?.duracionMinutos }} min</p>
         
-        <div class="card-resumen">
-        <h3>Película seleccionada: </h3>
-        
-        @if (resumen?.pelicula) {
-            <div class="pelicula-header">
-            <!-- <img 
-                *ngIf="resumen.pelicula.imagenUrl" 
-                [src]="resumen.pelicula.imagenUrl" 
-                [alt]="resumen.pelicula.titulo" 
-                class="mini-poster"
-            /> -->
-            <div>
-                <h3>{{ resumen.pelicula.titulo }}</h3>
-                <p><strong>Duración:</strong> {{ resumen.pelicula.duracionMinutos }} min</p>
-            </div>
-            </div>
-
-            <p><strong>Función:</strong> {{ resumen.fecha || 'Fecha regular' }} - {{ resumen.horario || 'Horario regular' }}</p>
-            <p><strong>Idioma / Formato:</strong> {{ resumen.idioma || 'Castellano' }} ({{ resumen.dimension || '2D' }})</p>
-            
-            <h4>Asientos Seleccionados ({{ resumen.asientos?.length || 0 }})</h4>
-            @if (resumen.asientos && resumen.asientos.length > 0) {
-            <ul class="lista-items">
-                @for (asiento of resumen.asientos; track $index) {
-                <li>
-                    Fila {{ asiento.fila }}, Butaca {{ asiento.columna }} 
-                    <span *ngIf="esVip(asiento)" class="badge-vip">(VIP)</span>
-                </li>
-                }
-            </ul>
-            } @else {
-            <p class="texto-vacio">Sin asientos seleccionados.</p>
+        <p><strong>Asientos Seleccionados ({{ resumen?.asientos?.length || 0 }})</strong></p>
+        <ul>
+            @for (asiento of resumen?.asientos; track asiento) {
+            <li>Fila {{ asiento.fila }}, Butaca {{ asiento.numero }}</li>
             }
-        } @else {
-            <div class="alerta-vacio">
-            <p>No hay ninguna película guardada en esta sesión.</p>
-            </div>
-        }
-
-        <div class="subtotal-box">
-            <span>Subtotal Entradas:</span>
-            <strong>${{ subtotalEntradas }}</strong>
-        </div>
+        </ul>
+        <p class="subtotal">Subtotal Entradas: ${{ subtotalEntradas }}</p>
         </div>
 
-        <div class="card-resumen">
+        <!-- Columna Candy Bar -->
+        <div class="card-info">
         <h3>Candy Bar</h3>
-
-        @if (resumen?.candy && resumen.candy.length > 0) {
-            <ul class="lista-items">
-            @for (item of resumen.candy; track item.id) {
-                <li>
-                <span>{{ item.nombre }} (x{{ item.cantidad || 1 }})</span>
-                <strong>${{ item.precio * (item.cantidad || 1) }}</strong>
-                </li>
+        <ul>
+            @for (item of resumen?.candy; track item) {
+            <li>{{ item.nombre }} (x{{ item.cantidad }}) - ${{ item.precio * item.cantidad }}</li>
             }
-            </ul>
-        } @else {
-            <p class="texto-vacio">No agregaste consumiciones de Candy Bar.</p>
+        </ul>
+        <p class="subtotal">Subtotal Candy: ${{ subtotalCandy }}</p>
+        </div>
+
+        <!-- Columna Detalle del Pago -->
+        <div class="card-info">
+        <h3>Detalle del Pago</h3>
+        <p>Subtotal de la compra: ${{ subtotalCompra }}</p>
+
+        @if (montoDescuento > 0) {
+            <p class="descuento">Descuento ({{ porcentajeDescuento }}%): -${{ montoDescuento }}</p>
         }
 
-        <div class="subtotal-box">
-            <span>Subtotal Candy:</span>
-            <strong>${{ subtotalCandy }}</strong>
-        </div>
-        </div>
+        @if (creditoAplicado > 0) {
+            <p class="credito">Crédito Aplicado: -${{ creditoAplicado }}</p>
+        }
 
-        <div class="card-resumen desglose-total">
-        <h3>Detalle del Pago</h3>
+        <h3>Total Final:</h3>
+        <h2 class="monto-total">${{ totalPagar }}</h2>
 
-        <div class="linea-desglose">
-            <span>Subtotal de la compra: </span>
-            <span>${{ subtotalEntradas + subtotalCandy }}</span>
-        </div>
-
-        <div *ngIf="montoDescuento > 0" class="linea-desglose descuento">
-            <span>Descuento 1ª Compra (20%):</span>
-            <span>-${{ montoDescuento }}</span>
-        </div>
-
-        <div *ngIf="creditoAplicado > 0" class="linea-desglose credito">
-            <span>Crédito a favor aplicado:</span>
-            <span>-${{ creditoAplicado }}</span>
-        </div>
-
-        <hr />
-
-        <div class="linea-total">
-            <h3>Total Final:</h3>
-            <h3>${{ totalPagar }}</h3>
-        </div>
-        </div>
-
-    </div>
-
-    <div class="acciones-pago">
-        <button class="btn-cancelar" (click)="volverAlCandy()">
-        Volver al Candy
-        </button>
-        
         <button 
-        class="btn-pagar" 
-        (click)="procesarPago()" 
-        [disabled]="!resumen?.pelicula && (subtotalEntradas + subtotalCandy) === 0">
-        Confirmar y Pagar
+            class="btn-confirmar" 
+            [disabled]="cargando" 
+            (click)="procesarPago()">
+            {{ cargando ? 'Procesando...' : 'Confirmar y Pagar' }}
         </button>
+
+        <button class="btn-volver" (click)="volverAlCandy()">Volver al Candy</button>
+        </div>
     </div>
-</section>
+
+    <!-- Modal con el Código QR -->
+    @if (mostrarModalQR) {
+        <div class="modal-overlay">
+        <div class="modal-content">
+            <h2>¡Pago Procesado con Éxito!</h2>
+            <p>Presenta este código QR en la entrada del cine y en la barra del Candy Bar:</p>
+            
+            <div class="qr-container">
+            <img [src]="qrImageUrl" alt="Código QR de la Entrada">
+            </div>
+
+            <p class="codigo-texto"><strong>Código:</strong> {{ codigoQRTexto }}</p>
+
+            <button class="btn-finalizar" (click)="cerrarModalYFinalizar()">
+            Aceptar y Volver a la Cartelera
+            </button>
+        </div>
+        </div>
+    }
+</div>

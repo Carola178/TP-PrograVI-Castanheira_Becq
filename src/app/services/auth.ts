@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { enviroment } from '../enviroments/enviroments';
+import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
+import { environment } from '../enviroments/enviroments';
 import { Router } from '@angular/router';
-
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +10,23 @@ import { Router } from '@angular/router';
     export class Auth {
     public supabase: SupabaseClient;
 
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
+    
+    public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
+
     constructor(private router: Router) {
-        this.supabase = createClient(enviroment.supabaseUrl, enviroment.supabasePublishableKey);
+        this.supabase = createClient(environment.supabaseUrl, environment.supabasePublishableKey);
+
+        this.initAuthState();
+    }
+
+    private async initAuthState() {
+        const { data: { session } } = await this.supabase.auth.getSession();
+        this.currentUserSubject.next(session?.user ?? null);
+
+        this.supabase.auth.onAuthStateChange((_event, session) => {
+        this.currentUserSubject.next(session?.user ?? null);
+        });
     }
 
     signIn(email: string, password: string) {
@@ -47,75 +62,76 @@ import { Router } from '@angular/router';
     }
 
     async registrarEventoSesion(authId: string, email: string, evento: 'LOGIN' | 'LOGOUT') {
-    const { error } = await this.supabase
+        const { error } = await this.supabase
         .from('historialSesiones')
         .insert([
-        {
+            {
             authId: authId,
             email: email,
             evento: evento
-        }
+            }
         ]);
-    if (error) {
+        if (error) {
         console.error(`Error al registrar ${evento}:`, error);
+        }
     }
-}
 
     async signOut(): Promise<void> {
-    const usuario = await this.getUsuarioActual();
+        const usuario = await this.getUsuarioActual();
 
-    if (usuario) {
+        if (usuario) {
         await this.registrarEventoSesion(usuario.id, usuario.email || '', 'LOGOUT');
-    }    const { error } = await this.supabase.auth.signOut();
-    if (error) {
+        }
+        const { error } = await this.supabase.auth.signOut();
+        if (error) {
         console.error('Error al cerrar sesión:', error.message);
-    } else {
+        } else {
         this.router.navigate(['/login']);
+        }
     }
-}
 
     async getUsuarioActual() {
         const { data: { user }, error: authError } = await this.supabase.auth.getUser();
         if (authError || !user) {
-            return null;
+        return null;
         }
         const { data: profile, error: profileError } = await this.supabase
-            .from('Usuarios')
-            .select('*')
-            .eq('auth_id', user.id) 
-            .maybeSingle();
+        .from('Usuarios')
+        .select('*')
+        .eq('auth_id', user.id) 
+        .maybeSingle();
         if (profileError) {
-            console.error('Error al obtener el perfil:', profileError);
+        console.error('Error al obtener el perfil:', profileError);
         }
         const fecha = profile ? (profile['fechaNacimiento'] || profile['FechaNacimiento'] || profile['fecha_nacimiento']) : null;
         return {
-            ...user,
-            fechaNacimiento: fecha
+        ...user,
+        fechaNacimiento: fecha
         };
     }
-    
+
     async esAdmin(): Promise<boolean> {
-    const { data: { user } } = await this.supabase.auth.getUser();
-    
-    if (!user) {
+        const { data: { user } } = await this.supabase.auth.getUser();
+        
+        if (!user) {
         console.log('No hay usuario autenticado en Supabase Auth');
         return false;
-    }
+        }
 
-    console.log('Usuario autenticado ID:', user.id);
+        console.log('Usuario autenticado ID:', user.id);
 
-    const { data: usuarioDB, error } = await this.supabase
+        const { data: usuarioDB, error } = await this.supabase
         .from('Usuarios')
         .select('*')
         .eq('auth_id', user.id)
         .single();
 
-    if (error) {
+        if (error) {
         console.error('Error al consultar la tabla Usuarios:', error);
         return false;
-    }
+        }
 
-    console.log('Datos traídos de la BD:', usuarioDB);
-    return usuarioDB?.rol === 'admin';
+        console.log('Datos traídos de la BD:', usuarioDB);
+        return usuarioDB?.rol === 'admin';
     }
 }

@@ -33,7 +33,6 @@ export class AdminCandy implements OnInit {
     this.cargarProductos();
   }
 
-  // Regla de Negocio: Puntos = 10% del precio
   onPrecioChange() {
     if (this.productoForm.precio && this.productoForm.precio > 0) {
       this.productoForm.puntos_canje = Math.round(this.productoForm.precio * 0.10);
@@ -77,7 +76,6 @@ export class AdminCandy implements OnInit {
       return;
     }
 
-    // Aseguramos la regla del 10% antes de enviar a la base de datos
     this.productoForm.puntos_canje = Math.round(this.productoForm.precio * 0.10);
 
     if (this.modoEdicion && this.productoForm.id) {

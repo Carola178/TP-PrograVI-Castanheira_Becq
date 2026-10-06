@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { enviroment } from '../enviroments/enviroments';
+import { environment } from '../enviroments/enviroments';
 import { Producto } from '../models/productoData';
 
 @Injectable({
@@ -11,8 +11,8 @@ import { Producto } from '../models/productoData';
 
     constructor() {
         this.supabase = createClient(
-        enviroment.supabaseUrl,
-        enviroment.supabasePublishableKey
+        environment.supabaseUrl,
+        environment.supabasePublishableKey
         );
     }
 

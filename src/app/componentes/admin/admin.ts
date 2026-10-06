@@ -9,7 +9,7 @@ import { AdminLog } from './admin-log/admin-log';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, AdminFunciones, AdminCandy, AdminDescuentos, AdminReportes, AdminLog],
+  imports: [CommonModule, AdminFunciones, AdminCandy, AdminReportes, AdminLog],
   templateUrl: './admin.html',
   styleUrl: './admin.css'
 })

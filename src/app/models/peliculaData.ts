@@ -14,4 +14,6 @@ export interface PeliculaData {
     esMasVendida?: boolean;
     promedioEstrellas?: number;
     esMayor18?: boolean;
+    horarios?: string[]; 
+    horarioElegido?: string;
 }

@@ -35,8 +35,30 @@
             <p *ngIf="pelicula.precioPreventa">Precio especial: ${{ pelicula.precioPreventa }}</p>
           </div>
         }
+
+        <!-- Selector de Horarios -->
+        @if (pelicula.horarios && pelicula.horarios.length > 0) {
+          <div class="horarios-seccion">
+            <h3>Selecciona un horario:</h3>
+            <div class="horarios-grid">
+              @for (horario of pelicula.horarios; track horario) {
+                <button 
+                  type="button" 
+                  class="btn-horario" 
+                  [class.activo]="horario === horarioSeleccionado"
+                  (click)="seleccionarHorario(horario)">
+                  {{ horario }}
+                </button>
+              }
+            </div>
+          </div>
+        }
         
-        <button class="btn-comprar-ticket" (click)="iniciarCompra()">Comprar Entradas</button>
+        <!-- Botón de Compra -->
+        <button 
+          class="btn-comprar-ticket" 
+          [disabled]="!horarioSeleccionado" 
+          (click)="iniciarCompra()">Comprar Entradas</button>
 
       </div>
     </div>

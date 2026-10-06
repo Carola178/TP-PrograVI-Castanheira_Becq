@@ -1,5 +1,3 @@
-<!----------------------Navbar----------------->
-
 <header class="navbar">
   <div class="logo">
     <img src="/assets/logo-cine.svg" alt="Logo" class="logo-img">
@@ -8,14 +6,15 @@
   <nav class="items-navbar">
     <a routerLink="/cartelera">Cartelera</a>
     <a routerLink="/candy">Candy</a>
-    <a routerLink="/proximosEstrenos">Proximos extrenos</a>
+    <a routerLink="/proximosEstrenos">Próximos estrenos</a>
     <a routerLink="/contacto">Contacto</a>
 
-    <button class="btn-logout" (click)="onCerrarSesion()">Cerrar sesión</button>
+    @if (usuario$ | async) {
+      <button class="btn-logout" (click)="onCerrarSesion()">Cerrar sesión</button>
+    }
   </nav>
 </header>
 
 <main class="body">
   <router-outlet></router-outlet>
 </main>
-

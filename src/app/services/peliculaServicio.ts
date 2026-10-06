@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { ReplaySubject, Observable } from 'rxjs';
-import { enviroment } from '../enviroments/enviroments';
+import { environment } from '../enviroments/enviroments';
 import { PeliculaData } from '../models/peliculaData';
 
 @Injectable({
@@ -13,10 +13,12 @@ export class PeliculaServicio {
   private peliculasSubject = new ReplaySubject<PeliculaData[]>(1);
   public peliculas$: Observable<PeliculaData[]> = this.peliculasSubject.asObservable();
 
+  private horariosPorDefecto: string[] = ['16:00 hs', '19:00 hs', '22:00 hs'];
+
   constructor() {
     this.supabase = createClient(
-      enviroment.supabaseUrl,
-      enviroment.supabasePublishableKey 
+      environment.supabaseUrl,
+      environment.supabasePublishableKey 
     );
   }
 
@@ -43,8 +45,9 @@ export class PeliculaServicio {
       precio: p.precio,
       precioPreventa: p.precioPreventa,
       sala: p.sala,
-      // Mapeamos ambas variantes (camelCase y snake_case)
-      esMayor18: p.esMayor18 ?? p.es_mayor_18 ?? false 
+      esMayor18: p.esMayor18 ?? p.es_mayor_18 ?? false,
+      // Mapeo directo de la columna "horarios" de Supabase
+      horarios: p.horarios && p.horarios.length > 0 ? p.horarios : this.horariosPorDefecto
     }));
 
     this.peliculasSubject.next(listaFormateada);
@@ -76,7 +79,9 @@ export class PeliculaServicio {
       precio: data.precio,
       precioPreventa: data.precioPreventa,
       sala: data.sala,
-      esMayor18: data.esMayor18 ?? false
+      esMayor18: data.esMayor18 ?? false,
+      // Mapeo directo de la columna "horarios" de Supabase
+      horarios: data.horarios && data.horarios.length > 0 ? data.horarios : this.horariosPorDefecto
     };
   }
 
@@ -94,6 +99,8 @@ export class PeliculaServicio {
       precioPreventa: Number(nuevaPeli.precioPreventa) || 0,
       sala: nuevaPeli.sala || 'sala 1',
       esMayor18: Boolean(nuevaPeli.esMayor18),
+      // Se guarda el array de horarios en Supabase
+      horarios: nuevaPeli.horarios && nuevaPeli.horarios.length > 0 ? nuevaPeli.horarios : this.horariosPorDefecto
     };
 
     const { data, error } = await this.supabase
@@ -132,18 +139,19 @@ export class PeliculaServicio {
       precioPreventa: Number(datosSinId.precioPreventa) || 0,
       sala: datosSinId.sala || 'sala 1',
       esMayor18: Boolean(datosSinId.esMayor18),
+      // Se actualiza la columna horarios
+      horarios: datosSinId.horarios && datosSinId.horarios.length > 0 ? datosSinId.horarios : this.horariosPorDefecto
     };
 
-    const { data, error } = await this.supabase
-      .from('Peliculas') // Reemplaza por el nombre exacto de tu tabla en Supabase
+    const { error } = await this.supabase
+      .from('Peliculas') 
       .update(payload)
-      .eq('id', Number(id)); // Nos aseguramos de que el ID sea un número puro
+      .eq('id', Number(id)); 
 
     if (error) {
       console.error('Error al actualizar película:', error);
       return false;
     }
-
     return true;
   }
 

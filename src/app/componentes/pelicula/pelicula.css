@@ -104,3 +104,46 @@
 .btn-comprar-ticket:active {
     transform: translateY(0);
 }
+.horarios-seccion {
+    margin: 20px 0;
+}
+
+.horarios-seccion h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.horarios-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-horario {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    border: 2px solid #5c181e;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.btn-horario:hover {
+    background-color: #5c181e;
+}
+
+.btn-horario.activo {
+    background-color: #e50914;
+    border-color: #ffffff;
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.btn-comprar-ticket:disabled {
+    background-color: #555555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

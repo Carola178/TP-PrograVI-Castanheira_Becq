@@ -48,5 +48,9 @@ export class Login implements OnInit {
 
     console.log('Login exitoso: ', resultado.data);
     this.router.navigate(['/cartelera']);
-    }  
+  }
+
+  onContinuarComoInvitado(): void {
+    this.router.navigate(['/cartelera']);
+  }
 }

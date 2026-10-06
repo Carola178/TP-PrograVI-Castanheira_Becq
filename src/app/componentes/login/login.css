@@ -57,6 +57,7 @@
     border-radius: 6px;
     font-size: 16px;
     font-weight: bold;
+    align-items: center;
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -107,3 +108,14 @@ input.ng-touched.ng-invalid{
     display: block;
     margin-top: 4px;
 }
+
+.login-formulario .texto-pregunta,
+.login-formulario a {
+    text-align: center;
+    display: block;
+    margin-top: 10px;
+}
+.btn-invitado {
+    width: 100%;
+    margin-top: 15px;
+    }

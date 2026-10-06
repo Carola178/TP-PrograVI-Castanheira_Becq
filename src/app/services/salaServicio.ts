@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
-import { enviroment } from '../enviroments/enviroments';
+import { environment } from '../enviroments/enviroments';
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +10,8 @@ export class SalaServicio {
 
     constructor() {
     this.supabase = createClient(
-        enviroment.supabaseUrl,
-        enviroment.supabasePublishableKey
+        environment.supabaseUrl,
+        environment.supabasePublishableKey
     );
 }
 
