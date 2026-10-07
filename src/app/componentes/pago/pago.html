@@ -4,74 +4,88 @@
     <div class="resumen-grid">
         <!-- Columna Película -->
         <div class="card-info">
-        <h3>Película seleccionada:</h3>
-        <h4>{{ resumen?.pelicula?.titulo }}</h4>
-        <p><strong>Duración:</strong> {{ resumen?.pelicula?.duracionMinutos }} min</p>
-        
-        <p><strong>Asientos Seleccionados ({{ resumen?.asientos?.length || 0 }})</strong></p>
-        <ul>
-            @for (asiento of resumen?.asientos; track asiento) {
-            <li>Fila {{ asiento.fila }}, Butaca {{ asiento.numero }}</li>
-            }
-        </ul>
-        <p class="subtotal">Subtotal Entradas: ${{ subtotalEntradas }}</p>
+            <h3>Película seleccionada:</h3>
+            <h4>{{ resumen?.pelicula?.titulo || resumen?.pelicula?.nombre || 'Sin selección' }}</h4>
+            <p *ngIf="resumen?.pelicula">
+                <strong>Duración:</strong> {{ resumen?.pelicula?.duracionMinutos || resumen?.pelicula?.duracion }} min
+            </p>
+            
+            <p><strong>Asientos Seleccionados ({{ resumen?.asientos?.length || 0 }})</strong></p>
+            <ul>
+                @for (asiento of resumen?.asientos; track $index) {
+                    <li>
+                        Fila {{ asiento.fila }}, Butaca {{ asiento.columna || asiento.numero }}
+                    </li>
+                } @empty {
+                    <li>No hay asientos seleccionados.</li>
+                }
+            </ul>
+            <p class="subtotal">Subtotal Entradas: ${{ subtotalEntradas }}</p>
         </div>
 
         <!-- Columna Candy Bar -->
         <div class="card-info">
-        <h3>Candy Bar</h3>
-        <ul>
-            @for (item of resumen?.candy; track item) {
-            <li>{{ item.nombre }} (x{{ item.cantidad }}) - ${{ item.precio * item.cantidad }}</li>
-            }
-        </ul>
-        <p class="subtotal">Subtotal Candy: ${{ subtotalCandy }}</p>
+            <h3>Candy Bar</h3>
+            <ul>
+                @for (item of resumen?.candy; track $index) {
+                    <li>
+                        {{ getNombreCandy(item) }} (x{{ item.cantidad || 1 }}) - ${{ getPrecioCandy(item) * (item.cantidad || 1) }}
+                    </li>
+                } @empty {
+                    <li>Sin productos de Candy.</li>
+                }
+            </ul>
+            <p class="subtotal">Subtotal Candy: ${{ subtotalCandy }}</p>
         </div>
 
         <!-- Columna Detalle del Pago -->
         <div class="card-info">
-        <h3>Detalle del Pago</h3>
-        <p>Subtotal de la compra: ${{ subtotalCompra }}</p>
+            <h3>Detalle del Pago</h3>
+            <p>Subtotal de la compra: ${{ subtotalCompra }}</p>
 
-        @if (montoDescuento > 0) {
-            <p class="descuento">Descuento ({{ porcentajeDescuento }}%): -${{ montoDescuento }}</p>
-        }
+            @if (montoDescuento > 0) {
+                <div class="cartel-descuento">
+                    🎉 ¡Tenés un descuento aplicado!
+                    <br>
+                    <small>{{ mensajeDescuento }}</small>
+                </div>
+                <p class="descuento">Descuento ({{ porcentajeDescuento }}%): -${{ montoDescuento }}</p>
+            }
 
-        @if (creditoAplicado > 0) {
-            <p class="credito">Crédito Aplicado: -${{ creditoAplicado }}</p>
-        }
+            @if (creditoAplicado > 0) {
+                <p class="credito">Crédito Aplicado: -${{ creditoAplicado }}</p>
+            }
 
-        <h3>Total Final:</h3>
-        <h2 class="monto-total">${{ totalPagar }}</h2>
+            <h3>Total Final:</h3>
+            <h2 class="monto-total">${{ totalPagar }}</h2>
 
-        <button 
-            class="btn-confirmar" 
-            [disabled]="cargando" 
-            (click)="procesarPago()">
-            {{ cargando ? 'Procesando...' : 'Confirmar y Pagar' }}
-        </button>
+            <button 
+                class="btn-confirmar" 
+                [disabled]="cargando" 
+                (click)="procesarPago()">
+                {{ cargando ? 'Procesando...' : 'Confirmar y Pagar' }}
+            </button>
 
-        <button class="btn-volver" (click)="volverAlCandy()">Volver al Candy</button>
+            <button class="btn-volver" (click)="volverAlCandy()">Volver al Candy</button>
         </div>
     </div>
 
-    <!-- Modal con el Código QR -->
     @if (mostrarModalQR) {
         <div class="modal-overlay">
-        <div class="modal-content">
-            <h2>¡Pago Procesado con Éxito!</h2>
-            <p>Presenta este código QR en la entrada del cine y en la barra del Candy Bar:</p>
-            
-            <div class="qr-container">
-            <img [src]="qrImageUrl" alt="Código QR de la Entrada">
+            <div class="modal-content">
+                <h2>¡Pago Procesado con Éxito!</h2>
+                <p>Presenta este código QR en la entrada del cine y en la barra del Candy Bar:</p>
+                
+                <div class="qr-container">
+                    <img [src]="qrImageUrl" alt="Código QR de la Entrada">
+                </div>
+
+                <p class="codigo-texto"><strong>Código:</strong> {{ codigoQRTexto }}</p>
+
+                <button class="btn-finalizar" (click)="cerrarModalYFinalizar()">
+                    Aceptar y Volver a la Cartelera
+                </button>
             </div>
-
-            <p class="codigo-texto"><strong>Código:</strong> {{ codigoQRTexto }}</p>
-
-            <button class="btn-finalizar" (click)="cerrarModalYFinalizar()">
-            Aceptar y Volver a la Cartelera
-            </button>
-        </div>
         </div>
     }
 </div>

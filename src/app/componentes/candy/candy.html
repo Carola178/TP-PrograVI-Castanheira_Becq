@@ -22,12 +22,19 @@
               <span class="puntos" *ngIf="combo.puntos_canje">Puntuación: {{ combo.puntos_canje }} pts</span>
             </div>
 
-            <button class="btn-agregar" (click)="agregarCandy(combo)">
+            <!-- Controles de selección / desmarque -->
+            <button 
+              *ngIf="obtenerCantidadCarrito(combo.id) === 0" 
+              class="btn-agregar" 
+              (click)="agregarCandy(combo)">
               Agregar al carrito
-              <span *ngIf="obtenerCantidadCarrito(combo.id) > 0">
-                ({{ obtenerCantidadCarrito(combo.id) }})
-              </span>
             </button>
+
+            <div *ngIf="obtenerCantidadCarrito(combo.id) > 0" class="controles-cantidad">
+              <button class="btn-restar" (click)="removerCandy(combo)">-</button>
+              <span class="cantidad-contador">{{ obtenerCantidadCarrito(combo.id) }}</span>
+              <button class="btn-sumar" (click)="agregarCandy(combo)">+</button>
+            </div>
           </div>
         </article>
       }
@@ -66,12 +73,19 @@
               <span class="puntos" *ngIf="prod.puntos_canje">⭐ {{ prod.puntos_canje }} pts</span>
             </div>
 
-            <button class="btn-agregar" (click)="agregarCandy(prod)">
+            <!-- Controles de selección / desmarque -->
+            <button 
+              *ngIf="obtenerCantidadCarrito(prod.id) === 0" 
+              class="btn-agregar" 
+              (click)="agregarCandy(prod)">
               Agregar al carrito
-              <span *ngIf="obtenerCantidadCarrito(prod.id) > 0">
-                ({{ obtenerCantidadCarrito(prod.id) }})
-              </span>
             </button>
+
+            <div *ngIf="obtenerCantidadCarrito(prod.id) > 0" class="controles-cantidad">
+              <button class="btn-restar" (click)="removerCandy(prod)">-</button>
+              <span class="cantidad-contador">{{ obtenerCantidadCarrito(prod.id) }}</span>
+              <button class="btn-sumar" (click)="agregarCandy(prod)">+</button>
+            </div>
           </div>
         </article>
       }

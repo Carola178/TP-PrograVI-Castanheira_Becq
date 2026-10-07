@@ -25,7 +25,6 @@ export class Sala implements OnInit, OnDestroy {
   asientosSeleccionados: Butaca[] = [];
   private canalRealtime!: RealtimeChannel;
 
-  // Precios base
   readonly PRECIO_BASE = 25000;
   readonly RECARGO_VIP = 40000;
   readonly PRECIO_DISCAPACIDAD = 20000;

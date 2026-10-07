@@ -109,13 +109,7 @@
   object-fit: cover;
   display: block;
 }
-/* Asegura que el contenedor de la película funcione como referencia de posición
-.card-pelicula {
-  position: relative;
-  overflow: hidden;
-} */
 
-/* Estilo para el badge +18 estilo "Píldora / Etiqueta" */
 .badge-18 {
   position: absolute;
   top: 12px;
@@ -132,7 +126,6 @@
   z-index: 5;
 }
 
-/* En caso de coincidir con badge de preventa, ajusta el desfase vertical */
 .badge-preventa + .badge-18 {
   top: 45px;
 }

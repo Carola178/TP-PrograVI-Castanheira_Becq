@@ -1,4 +1,3 @@
-/* --- Contenedor General --- */
 .candy-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -228,4 +227,35 @@
 
 .btn-continuar-pago:active {
   transform: scale(0.98);
+}
+
+.controles-cantidad {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #8b0000;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.controles-cantidad button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.controles-cantidad button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.cantidad-contador {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
 }

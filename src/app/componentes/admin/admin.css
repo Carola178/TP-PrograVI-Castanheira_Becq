@@ -5,7 +5,7 @@
 
     .admin-sidebar {
     width: 260px;
-    background-color: #1a1a1a;
+    background-color: #b21919;
     color: white;
     padding: 1.5rem;
     display: flex;
@@ -32,7 +32,7 @@
     }
 
     .admin-sidebar button.active {
-    background-color: #e50914; /* Rojo estilo cine */
+    background-color: #e50914; 
     color: white;
     font-weight: bold;
     }

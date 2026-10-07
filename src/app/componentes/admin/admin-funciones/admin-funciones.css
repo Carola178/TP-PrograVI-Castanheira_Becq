@@ -131,7 +131,6 @@
     background-color: #d68910;
 }
 
-/* Botón Eliminar (Rojo) */
 .btn-danger {
     background-color: #dc3545;
     color: #ffffff;
@@ -141,7 +140,6 @@
     background-color: #bb2d3b;
 }
 
-/* Efecto al presionar cualquier botón */
 .btn-warning:active,
 .btn-danger:active {
     transform: scale(0.98);

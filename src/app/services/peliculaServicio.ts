@@ -46,7 +46,6 @@ export class PeliculaServicio {
       precioPreventa: p.precioPreventa,
       sala: p.sala,
       esMayor18: p.esMayor18 ?? p.es_mayor_18 ?? false,
-      // Mapeo directo de la columna "horarios" de Supabase
       horarios: p.horarios && p.horarios.length > 0 ? p.horarios : this.horariosPorDefecto
     }));
 
@@ -80,7 +79,6 @@ export class PeliculaServicio {
       precioPreventa: data.precioPreventa,
       sala: data.sala,
       esMayor18: data.esMayor18 ?? false,
-      // Mapeo directo de la columna "horarios" de Supabase
       horarios: data.horarios && data.horarios.length > 0 ? data.horarios : this.horariosPorDefecto
     };
   }
@@ -139,7 +137,6 @@ export class PeliculaServicio {
       precioPreventa: Number(datosSinId.precioPreventa) || 0,
       sala: datosSinId.sala || 'sala 1',
       esMayor18: Boolean(datosSinId.esMayor18),
-      // Se actualiza la columna horarios
       horarios: datosSinId.horarios && datosSinId.horarios.length > 0 ? datosSinId.horarios : this.horariosPorDefecto
     };
 

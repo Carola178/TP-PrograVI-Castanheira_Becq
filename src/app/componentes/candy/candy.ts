@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { ProductosServicio } from '../../services/productosServicio';
 import { CompraServicio } from '../../services/compraServicio';
 
@@ -54,16 +53,15 @@ export class Candy implements OnInit {
   }
 
   agregarCandy(producto: any) {
-    this.compraServicio.agregarProductoCandy({
-      ...producto,
-      cantidad: 1
-    });
+    this.compraServicio.agregarProductoCandy(producto);
+  }
+
+  removerCandy(producto: any) {
+    this.compraServicio.reducirProductoCandy(producto.id);
   }
 
   obtenerCantidadCarrito(productoId: any): number {
-    const resumen = this.compraServicio.getResumenCompra();
-    const item = (resumen?.candy || []).find((p: any) => p.id === productoId);
-    return item?.cantidad ?? 0; 
+    return this.compraServicio.getCantidadProducto(productoId);
   }
 
   IrAlPago() {

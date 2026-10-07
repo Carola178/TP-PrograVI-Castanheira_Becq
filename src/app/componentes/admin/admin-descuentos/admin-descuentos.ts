@@ -1,75 +1,108 @@
-import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Cupon, ConfiguracionPuntos } from '../../../models/cuponData';
-import { environment} from '../../../enviroments/enviroments';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CompraServicio, ConfiguracionDescuento } from '../../../services/compraServicio';
 
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'app-admin-descuentos',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './admin-descuentos.html',
+  styleUrls: ['./admin-descuentos.css']
 })
-export class AdminDescuentos {
-  private supabase: SupabaseClient;
+export class AdminDescuentos implements OnInit {
+  descuentoPrimeraCompra: number = 20; // RF 4: 20%
+  descuentoMayorEdad: number = 0;
 
-  constructor() {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabasePublishableKey);
+  cargando: boolean = false;
+  guardandoPrimera: boolean = false;
+  guardandoMayorEdad: boolean = false;
+
+  mensajeError: string = '';
+  mensajeExito: string = '';
+
+  constructor(
+    private compraServicio: CompraServicio,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarDescuentos();
   }
 
-  async getConfiguracion(): Promise<ConfiguracionPuntos | null> {
-    const { data, error } = await this.supabase
-      .from('configuracion')
-      .select('*')
-      .single();
+  async cargarDescuentos() {
+    this.cargando = true;
+    this.limpiarMensajes();
 
-    if (error) {
-      console.error('Error al obtener configuración:', error);
-      return null;
+    try {
+      const configs: ConfiguracionDescuento[] = await this.compraServicio.obtenerConfiguracionesDescuentos();
+      
+      const itemPrimera = configs.find(c => c.clave === 'descuento_primera_compra');
+      if (itemPrimera) {
+        this.descuentoPrimeraCompra = itemPrimera.valor;
+      }
+
+      const itemMayorEdad = configs.find(c => c.clave === 'descuento_mayor_edad');
+      if (itemMayorEdad) {
+        this.descuentoMayorEdad = itemMayorEdad.valor;
+      }
+    } catch (error) {
+      console.error('Error al cargar descuentos:', error);
+      this.mensajeError = 'Error al obtener las configuraciones.';
+    } finally {
+      this.cargando = false;
+      this.cdr.detectChanges();
     }
-    return data;
   }
 
-  async actualizarConfiguracion(config: ConfiguracionPuntos): Promise<boolean> {
-    const { error } = await this.supabase
-      .from('configuracion')
-      .update(config)
-      .eq('id', config.id || 1);
+  async guardarDescuentoPrimeraCompra() {
+    this.limpiarMensajes();
 
-    if (error) {
-      console.error('Error al actualizar configuración:', error);
-      return false;
+    if (this.descuentoPrimeraCompra < 0 || this.descuentoPrimeraCompra > 100) {
+      this.mensajeError = 'El porcentaje debe estar entre 0 y 100.';
+      return;
     }
-    return true;
-  }
 
-  async getCupones(): Promise<Cupon[]> {
-    const { data, error } = await this.supabase
-      .from('cupones')
-      .select('*')
-      .order('created_at', { ascending: false });
+    this.guardandoPrimera = true;
+    const exito = await this.compraServicio.guardarPorcentajeDescuento(
+      'descuento_primera_compra',
+      this.descuentoPrimeraCompra
+    );
+    this.guardandoPrimera = false;
 
-    if (error) {
-      console.error('Error al traer cupones:', error);
-      return [];
+    if (exito) {
+      this.mensajeExito = 'Porcentaje de primera compra guardado con éxito.';
+    } else {
+      this.mensajeError = 'Error al actualizar el descuento.';
     }
-    return data || [];
+    this.cdr.detectChanges();
   }
 
-  async crearCupon(cupon: Cupon): Promise<boolean> {
-    const { error } = await this.supabase
-      .from('cupones')
-      .insert([cupon]);
+  async guardarDescuentoMayorEdad() {
+    this.limpiarMensajes();
 
-    if (error) {
-      console.error('Error al crear cupón:', error);
-      return false;
+    if (this.descuentoMayorEdad < 0 || this.descuentoMayorEdad > 100) {
+      this.mensajeError = 'El porcentaje debe estar entre 0 y 100.';
+      return;
     }
-    return true;
+
+    this.guardandoMayorEdad = true;
+    const exito = await this.compraServicio.guardarPorcentajeDescuento(
+      'descuento_mayor_edad',
+      this.descuentoMayorEdad
+    );
+    this.guardandoMayorEdad = false;
+
+    if (exito) {
+      this.mensajeExito = 'Porcentaje para mayores de edad guardado con éxito.';
+    } else {
+      this.mensajeError = 'Error al actualizar el descuento.';
+    }
+    this.cdr.detectChanges();
   }
 
-  async toggleEstadoCupon(id: number, activo: boolean): Promise<boolean> {
-    const { error } = await this.supabase
-      .from('cupones')
-      .update({ activo })
-      .eq('id', id);
-
-    return !error;
+  limpiarMensajes() {
+    this.mensajeError = '';
+    this.mensajeExito = '';
   }
 }

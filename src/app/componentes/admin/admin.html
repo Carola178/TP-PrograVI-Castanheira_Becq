@@ -1,21 +1,15 @@
-    <div class="admin-container">
+<div class="admin-container">
     <aside class="admin-sidebar">
         <h2>Panel Admin</h2>
         <nav>
-        <button (click)="seccionActual = 'funciones'" [class.active]="seccionActual === 'funciones'">
+        <button (click)="cambiarSeccion('funciones')" [class.active]="seccionActual === 'funciones'">
             Funciones y Películas
         </button>
-        <button (click)="seccionActual = 'candy'" [class.active]="seccionActual === 'candy'">
+        <button (click)="cambiarSeccion('candy')" [class.active]="seccionActual === 'candy'">
             Candy Bar y Combos
         </button>
-        <button (click)="seccionActual = 'descuentos'" [class.active]="seccionActual === 'descuentos'">
+        <button (click)="cambiarSeccion('descuentos')" [class.active]="seccionActual === 'descuentos'">
             Descuentos y Puntos
-        </button>
-        <button (click)="seccionActual = 'reportes'" [class.active]="seccionActual === 'reportes'">
-            Reportes y Gráficos
-        </button>
-        <button (click)="seccionActual = 'log'" [class.active]="seccionActual === 'log'">
-            Log de Actividad
         </button>
         </nav>
     </aside>
@@ -24,9 +18,7 @@
         @switch (seccionActual) {
         @case ('funciones') { <app-admin-funciones /> }
         @case ('candy') { <app-admin-candy /> }
-        <!-- @case ('descuentos') { <app-admin-descuentos /> } -->
-        @case ('reportes') { <app-admin-reportes /> }
-        @case ('log') { <app-admin-log /> }
+        @case ('descuentos') { <app-admin-descuentos /> }
         }
     </main>
-    </div>
+</div>

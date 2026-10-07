@@ -1,1 +1,40 @@
-<p>admin-descuentos works!</p>
+<div class="admin-descuentos-container">
+    <h2>Gestión de Descuentos y Puntos</h2>
+
+    <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
+    <div *ngIf="mensajeExito" class="alert alert-success">{{ mensajeExito }}</div>
+
+    <div *ngIf="cargando" class="loading">Cargando datos...</div>
+
+    <div *ngIf="!cargando" class="descuentos-grid">
+        
+        <div class="card-descuento">
+        <h3>Descuento Primera Compra</h3>
+        <p>Configura el porcentaje de descuento que se aplicará en la primera compra de un usuario registrado.</p>
+        
+        <div class="form-group">
+            <label>Porcentaje (%):</label>
+            <input type="number" [(ngModel)]="descuentoPrimeraCompra" min="0" max="100" class="form-control" />
+        </div>
+
+        <button class="btn-guardar" (click)="guardarDescuentoPrimeraCompra()" [disabled]="guardandoPrimera">
+            {{ guardandoPrimera ? 'Guardando...' : 'Guardar Descuento' }}
+        </button>
+        </div>
+
+        <div class="card-descuento">
+        <h3>Descuento Mayores de Edad</h3>
+        <p>Configura el porcentaje de descuento aplicable a usuarios registrados mayores de edad.</p>
+        
+        <div class="form-group">
+            <label>Porcentaje (%):</label>
+            <input type="number" [(ngModel)]="descuentoMayorEdad" min="0" max="100" class="form-control" />
+        </div>
+
+        <button class="btn-guardar" (click)="guardarDescuentoMayorEdad()" [disabled]="guardandoMayorEdad">
+            {{ guardandoMayorEdad ? 'Guardando...' : 'Guardar Descuento' }}
+        </button>
+        </div>
+
+    </div>
+</div>

@@ -45,11 +45,10 @@ export class Registro implements OnInit{
     this.registroModel.valueChanges.subscribe(estado => console.log(estado)) //observables, se actualiza todo el estado
 
   }
-  mostrar(){
-    // console.log(this.loginModel.value)
-    console.log(this.registroModel.valid);
+  // mostrar(){
+  //   console.log(this.registroModel.valid);
 
-  }
+  // }
 
 
   constructor(private auth: Auth, private router: Router) {}

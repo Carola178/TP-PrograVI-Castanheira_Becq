@@ -9,13 +9,24 @@ export interface UsuarioCompra {
     id?: string;
     esRegistrado: boolean;
     creditoDisponible: number;
-    fechaNacimiento?: string; // Formato YYYY-MM-DD para calcular +50 años
-    }
+    fechaNacimiento?: string;
+}
 
-    @Injectable({
+export interface ConfiguracionDescuento {
+    clave: string;
+    valor: number;
+    descripcion?: string;
+}
+
+export interface ItemCandySeleccionado {
+    producto: Producto;
+    cantidad: number;
+}
+
+@Injectable({
     providedIn: 'root'
-    })
-    export class CompraServicio {
+})
+export class CompraServicio {
     private supabase: SupabaseClient;
 
     public funcionId: number | string | null = null;
@@ -25,7 +36,7 @@ export interface UsuarioCompra {
     public dimensionSeleccionada: string = '2D';
 
     public asientosSeleccionados: Butaca[] = [];
-    public productosCandy: Producto[] = [];
+    public productosCandy: ItemCandySeleccionado[] = [];
 
     public usuarioInfo: UsuarioCompra = {
         esRegistrado: false,
@@ -40,14 +51,14 @@ export interface UsuarioCompra {
 
     get peliculaSeleccionada(): PeliculaData | null {
         if (!this._peliculaSeleccionada) {
-        const guardada = localStorage.getItem('pelicula_seleccionada');
-        if (guardada) {
-            try {
-            this._peliculaSeleccionada = JSON.parse(guardada);
-            } catch (e) {
-            console.error('Error al parsear película guardada', e);
+            const guardada = localStorage.getItem('pelicula_seleccionada');
+            if (guardada) {
+                try {
+                    this._peliculaSeleccionada = JSON.parse(guardada);
+                } catch (e) {
+                    console.error('Error al parsear película guardada', e);
+                }
             }
-        }
         }
         return this._peliculaSeleccionada;
     }
@@ -55,56 +66,152 @@ export interface UsuarioCompra {
     set peliculaSeleccionada(pelicula: PeliculaData | null) {
         this._peliculaSeleccionada = pelicula;
         if (pelicula) {
-        localStorage.setItem('pelicula_seleccionada', JSON.stringify(pelicula));
+            localStorage.setItem('pelicula_seleccionada', JSON.stringify(pelicula));
         } else {
-        localStorage.removeItem('pelicula_seleccionada');
+            localStorage.removeItem('pelicula_seleccionada');
         }
     }
 
-    seleccionarFuncion(pelicula: PeliculaData) {
-        this.peliculaSeleccionada = pelicula;
-    }
+    // ===============================================================
+    // MÉTODOS DE NAVEGACIÓN Y SELECCIÓN DE FUNCIÓN Y ASIENTOS
+    // ===============================================================
 
-    agregarProductoCandy(producto: Producto) {
-        const existente = this.productosCandy.find(p => p.id === producto.id);
-        if (existente) {
-        existente.cantidad = (existente.cantidad || 1) + 1;
-        } else {
-        this.productosCandy.push({
-            ...producto,
-            cantidad: 1
-        });
+    seleccionarFuncion(pelicula: PeliculaData | any, funcionId?: number | string): void {
+        if (pelicula) {
+            this.peliculaSeleccionada = pelicula;
+        }
+        if (funcionId !== undefined) {
+            this.funcionId = funcionId;
         }
     }
 
-        // Disminuye la cantidad de un producto o lo elimina si llega a 0
-    reducirProductoCandy(productoId: number | string) {
-    const indice = this.productosCandy.findIndex(p => p.id === productoId);
-    if (indice !== -1) {
-        if ((this.productosCandy[indice].cantidad || 1) > 1) {
-        this.productosCandy[indice].cantidad!--;
-        } else {
-        this.productosCandy.splice(indice, 1);
-        }
-    }
-    }
-
-    // Elimina completamente el producto del carrito sin importar la cantidad
-    eliminarProductoCandy(productoId: number | string) {
-    this.productosCandy = this.productosCandy.filter(p => p.id !== productoId);
-    }
-
-    // Helper para saber cuántas unidades de un producto hay seleccionadas
-    getCantidadProducto(productoId: number | string): number {
-    const encontrado = this.productosCandy.find(p => p.id === productoId);
-    return encontrado?.cantidad || 0;
-    }
-
-    seleccionarAsientos(asientos: Butaca[]) {
+    seleccionarAsientos(asientos: Butaca[], funcionId?: number | string): void {
         this.asientosSeleccionados = asientos;
+        if (funcionId !== undefined) {
+            this.funcionId = funcionId;
+        }
     }
 
-    // --- LÓGICA DE CÁLCULO DE DESCUENTOS ---
+    // ===============================================================
+    // MÉTODOS DE GESTIÓN DE CANDY BAR
+    // ===============================================================
+
+    agregarProductoCandy(producto: Producto): void {
+        const index = this.productosCandy.findIndex(item => item.producto.id === producto.id);
+        if (index >= 0) {
+            this.productosCandy[index].cantidad++;
+        } else {
+            this.productosCandy.push({ producto, cantidad: 1 });
+        }
+    }
+
+    reducirProductoCandy(productoId: number | string): void {
+        const index = this.productosCandy.findIndex(item => item.producto.id === productoId);
+        if (index >= 0) {
+            this.productosCandy[index].cantidad--;
+            if (this.productosCandy[index].cantidad <= 0) {
+                this.productosCandy.splice(index, 1);
+            }
+        }
+    }
+
+    getCantidadProducto(productoId: number | string): number {
+        const item = this.productosCandy.find(i => i.producto.id === productoId);
+        return item ? item.cantidad : 0;
+    }
+
+    // ===============================================================
+    // MÉTODOS DE RESUMEN, COMPRA Y LIMPIEZA
+    // ===============================================================
+
+    getResumenCompra() {
+        const totalEntradas = this.asientosSeleccionados.reduce((acc, b: any) => {
+            const fila = b?.fila?.toUpperCase();
+            const esVip = b?.esVip || ['R', 'S', 'T'].includes(fila);
+            const precioBase = esVip ? 7500 : 5000;
+            return acc + (Number(b.precio) || precioBase);
+        }, 0);
+
+        const totalCandy = this.productosCandy.reduce((acc, item: any) => {
+            const precio = Number(item?.producto?.precio) || Number(item?.precio) || 0;
+            const cant = Number(item?.cantidad) || 1;
+            return acc + (precio * cant);
+        }, 0);
+        
+        return {
+            pelicula: this.peliculaSeleccionada,
+            funcionId: this.funcionId,
+            asientos: this.asientosSeleccionados,
+            candy: this.productosCandy,
+            usuario: this.usuarioInfo,
+            totalEntradas,
+            totalCandy,
+            totalGeneral: totalEntradas + totalCandy
+        };
+    }
+
+    async confirmarYGuardarCompra(
+        montoOMetodo: string | number = 'Efectivo',
+        creditoAplicado: number = 0
+    ): Promise<{ exito: boolean; codigoQR?: string; error?: any }> {
+        try {
+            const resumen = this.getResumenCompra();
+            
+            let montoTotalCalculado = resumen.totalGeneral;
+            let metodoPagoFinal = 'Efectivo';
+
+            if (typeof montoOMetodo === 'number') {
+                montoTotalCalculado = montoOMetodo;
+            } else if (typeof montoOMetodo === 'string') {
+                metodoPagoFinal = montoOMetodo;
+            }
+
+            const montoFinal = Math.max(0, montoTotalCalculado - creditoAplicado);
+            const codigoQRGenerado = `CINE-${Math.random().toString(36).substring(2, 9).toUpperCase()}-${Date.now()}`;
+
+            // Objeto que coincide EXACTAMENTE con las columnas de Supabase
+            const compraData = {
+                usuarioId: this.usuarioInfo.id || null,
+                total: montoFinal,
+                descuentoAplicado: 0,
+                creditoUsado: creditoAplicado,
+                puntosGanados: 0,
+                puntosUsados: 0,
+                codigoQr: codigoQRGenerado,
+                estado: 'CONFIRMADA',
+                qrEntradaValidado: false,
+                qrCandyValidado: false
+            };
+
+            const { data, error } = await this.supabase
+                .from('compras')
+                .insert([compraData])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error al registrar compra en Supabase:', error);
+                return { exito: false, error };
+            }
+
+            return { 
+                exito: true, 
+                codigoQR: codigoQRGenerado 
+            };
+        } catch (err) {
+            console.error('Error general en confirmarYGuardarCompra:', err);
+            return { exito: false, error: err };
+        }
+    }
+
+    limpiar(): void {
+        this.funcionId = null;
+        this.fechaSeleccionada = '';
+        this.horarioSeleccionado = '';
+        this.asientosSeleccionados = [];
+        this.productosCandy = [];
+        this.peliculaSeleccionada = null;
+    }
 
     private calcularEdad(fechaNacimientoStr?: string): number {
         if (!fechaNacimientoStr) return 0;
@@ -113,160 +220,113 @@ export interface UsuarioCompra {
         let edad = hoy.getFullYear() - nacimiento.getFullYear();
         const mes = hoy.getMonth() - nacimiento.getMonth();
         if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
+            edad--;
         }
         return edad;
     }
 
-    /**
-     * Obtiene el porcentaje de descuento a aplicar leyendo la config del Admin en Supabase
-     */
+    // ===============================================================
+    // CÁLCULO DE DESCUENTO 
+    // ===============================================================
     async calcularPorcentajeDescuento(): Promise<number> {
         if (!this.usuarioInfo.esRegistrado || !this.usuarioInfo.id) {
-        return 0; // Usuarios no registrados / invitados no tienen descuento
+            return 0;
         }
 
         try {
-        // 1. Consultar configuración cargada por el Admin
-        const { data: configs } = await this.supabase
-            .from('configuraciones')
-            .select('clave, valor');
+            const { data: configs, error: errConfigs } = await this.supabase
+                .from('configuracionesAdmin')
+                .select('clave, valor');
 
-        const porcPrimeraCompra = configs?.find(c => c.clave === 'descuento_primera_compra')?.valor || 20;
-        const porcMayor50 = configs?.find(c => c.clave === 'descuento_mayor_50')?.valor || 20;
-
-        // 2. Consultar si el usuario ya realizó compras previas
-        const { count: totalCompras } = await this.supabase
-            .from('compras')
-            .select('id', { count: 'exact', head: true })
-            .eq('usuarioId', this.usuarioInfo.id);
-
-        let porcentajeAplicable = 0;
-
-        // Regla A: Primera compra de usuario registrado
-        if (totalCompras === 0) {
-            porcentajeAplicable = Math.max(porcentajeAplicable, porcPrimeraCompra);
-        }
-
-        // Regla B: Mayor de 50 años
-        const edad = this.calcularEdad(this.usuarioInfo.fechaNacimiento);
-        if (edad >= 50) {
-            porcentajeAplicable = Math.max(porcentajeAplicable, porcMayor50);
-        }
-
-        return porcentajeAplicable;
-        } catch (err) {
-        console.error('Error calculando descuento:', err);
-        return 0;
-        }
-    }
-
-    private generarCodigoQR(): string {
-        return 'CINE-' + Math.random().toString(36).substring(2, 9).toUpperCase() + '-' + Date.now();
-    }
-
-    // --- CONFIRMACIÓN Y GUARDADO DE COMPRA ---
-
-    async confirmarYGuardarCompra(
-        subtotal: number,
-        creditoUsado: number = 0
-    ): Promise<{ exito: boolean; codigoQR?: string; compraId?: number }> {
-        try {
-        const porcentajeDescuento = await this.calcularPorcentajeDescuento();
-        const descuentoMonto = (subtotal * porcentajeDescuento) / 100;
-        const totalFinal = Math.max(0, subtotal - descuentoMonto - creditoUsado);
-
-        const codigoQR = this.generarCodigoQR();
-        const puntosCalculados = Math.floor(totalFinal); // 1 punto por peso gastado (ajustable)
-
-        // Inserción en la tabla 'compras' (usando los nombres de columnas de tu Supabase)
-        const { data: compra, error: errorCompra } = await this.supabase
-            .from('compras')
-            .insert([{
-            usuarioId: this.usuarioInfo.esRegistrado ? this.usuarioInfo.id : null,
-            total: totalFinal,
-            descuentoAplicado: descuentoMonto,
-            creditoUsado: creditoUsado,
-            puntosGanados: this.usuarioInfo.esRegistrado ? puntosCalculados : 0,
-            codigoQr: codigoQR,
-            qrEntradaValidado: false,
-            qrCandyValidado: false,
-            estado: 'CONFIRMADA'
-            }])
-            .select()
-            .single();
-
-        if (errorCompra || !compra) {
-            console.error('Error al insertar en compras:', errorCompra);
-            return { exito: false };
-        }
-
-        const detalles: any[] = [];
-
-        // A) Entradas de cine
-        this.asientosSeleccionados.forEach(asiento => {
-            detalles.push({
-            compraId: compra.id,
-            tipo: 'ENTRADA',
-            peliculaId: this.peliculaSeleccionada?.id || null,
-            asiento: `${asiento.fila}-${asiento.columna}`,
-            cantidad: 1,
-            precioUnitario: asiento.precio || 5000
-            });
-        });
-
-        // B) Productos del Candy
-        this.productosCandy.forEach(p => {
-            detalles.push({
-            compraId: compra.id,
-            tipo: 'CANDY',
-            productoId: p.id,
-            cantidad: p.cantidad || 1,
-            precioUnitario: p.precio
-            });
-        });
-
-        if (detalles.length > 0) {
-            const { error: errorDetalles } = await this.supabase
-            .from('detalleCompras')
-            .insert(detalles);
-
-            if (errorDetalles) {
-            console.error('Error al guardar el detalleCompras:', errorDetalles);
-            return { exito: false };
+            if (errConfigs) {
+                console.error('Error al leer configuraciones desde BDD:', errConfigs);
             }
-        }
 
-        return { exito: true, codigoQR, compraId: compra.id };
+            const itemPrimera = configs?.find(c => c.clave === 'descuento_primera_compra');
+            const itemMayorEdad = configs?.find(c => c.clave === 'descuento_mayor_edad');
+
+            const porcPrimeraCompra = itemPrimera ? Number(itemPrimera.valor) : 20;
+            const porcMayorEdad = itemMayorEdad ? Number(itemMayorEdad.valor) : 0;
+
+            let totalCompras = 0;
+            
+            const res = await this.supabase
+                .from('compras')
+                .select('id', { count: 'exact', head: true })
+                .eq('usuarioId', this.usuarioInfo.id);
+
+            totalCompras = res.count || 0;
+
+            let porcentajeAplicable = 0;
+
+            if (totalCompras === 0) {
+                porcentajeAplicable = Math.max(porcentajeAplicable, porcPrimeraCompra);
+            }
+
+            const edad = this.calcularEdad(this.usuarioInfo.fechaNacimiento);
+            if (edad >= 18 && porcMayorEdad > 0) {
+                porcentajeAplicable = Math.max(porcentajeAplicable, porcMayorEdad);
+            }
+
+            return porcentajeAplicable;
 
         } catch (err) {
-        console.error('Excepción al confirmar compra:', err);
-        return { exito: false };
+            console.error('Error calculando descuento:', err);
+            return 0;
         }
     }
 
-    
-    getResumenCompra() {
-    return {
-        asientos: this.asientosSeleccionados,
-        candy: this.productosCandy,
-        usuario: this.usuarioInfo,
-        pelicula: this.peliculaSeleccionada,
-        funcionId: this.funcionId,
-        fecha: this.fechaSeleccionada,
-        horario: this.horarioSeleccionado
-    };
+    // ===============================================================
+    // MÉTODOS PARA EL PANEL DE ADMINISTRADOR
+    // ===============================================================
+
+    async obtenerConfiguracionesDescuentos(): Promise<ConfiguracionDescuento[]> {
+        const { data, error } = await this.supabase
+            .from('configuracionesAdmin')
+            .select('clave, valor')
+            .in('clave', ['descuento_primera_compra', 'descuento_mayor_edad']);
+
+        if (error || !data || data.length === 0) {
+            return [
+                { clave: 'descuento_primera_compra', valor: 20 },
+                { clave: 'descuento_mayor_edad', valor: 0 }
+            ];
+        }
+
+        return data.map(item => ({
+            clave: item.clave,
+            valor: Number(item.valor)
+        }));
     }
 
-    limpiar() {
-        this._peliculaSeleccionada = null;
-        localStorage.removeItem('pelicula_seleccionada');
-        this.funcionId = null;
-        this.fechaSeleccionada = '';
-        this.horarioSeleccionado = '';
-        this.idiomaSeleccionado = 'Castellano';
-        this.dimensionSeleccionada = '2D';
-        this.asientosSeleccionados = [];
-        this.productosCandy = [];
+    async guardarPorcentajeDescuento(clave: string, nuevoPorcentaje: number): Promise<boolean> {
+        try {
+            const { data, error: updateError } = await this.supabase
+                .from('configuracionesAdmin')
+                .update({ valor: nuevoPorcentaje })
+                .eq('clave', clave)
+                .select();
+
+            if (updateError) {
+                console.error(`Error actualizando descuento ${clave}:`, updateError);
+                return false;
+            }
+
+            if (!data || data.length === 0) {
+                const { error: insertError } = await this.supabase
+                    .from('configuracionesAdmin')
+                    .insert({ clave: clave, valor: nuevoPorcentaje });
+
+                if (insertError) {
+                    console.error(`Error insertando descuento ${clave}:`, insertError);
+                    return false;
+                }
+            }
+
+            return true;
+        } catch (err) {
+            console.error(`Error general al guardar descuento ${clave}:`, err);
+            return false;
+        }
     }
 }

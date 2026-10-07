@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { PeliculaServicio } from '../../../services/peliculaServicio';
 import { PeliculaData } from '../../../models/peliculaData';
 

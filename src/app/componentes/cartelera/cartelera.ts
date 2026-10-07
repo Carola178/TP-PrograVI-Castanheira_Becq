@@ -27,7 +27,7 @@ export class Cartelera implements OnInit, OnDestroy {
   constructor(
     private peliculaServicio: PeliculaServicio,
     private compraServicio: CompraServicio,
-    private auth: Auth, // Inyectamos el servicio de autenticación
+    private auth: Auth, 
     private router: Router,
     private cdr: ChangeDetectorRef 
   ) {}

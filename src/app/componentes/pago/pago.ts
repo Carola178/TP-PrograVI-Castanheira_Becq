@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CompraServicio } from '../../services/compraServicio';
@@ -18,6 +18,7 @@ export class Pago implements OnInit {
   subtotalCompra = 0;
   montoDescuento = 0;
   porcentajeDescuento = 0;
+  mensajeDescuento = '';
   creditoAplicado = 0;
   totalPagar = 0;
 
@@ -25,14 +26,14 @@ export class Pago implements OnInit {
   precioEntradaBase = 5000;
   precioEntradaVip = 7500;
 
-  // Variables para el Modal del QR
   mostrarModalQR = false;
   codigoQRTexto = '';
   qrImageUrl = '';
 
   constructor(
-    private compraServicio: CompraServicio,
-    private router: Router
+    public compraServicio: CompraServicio,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
@@ -55,35 +56,77 @@ export class Pago implements OnInit {
     return asiento?.esVip || ['R', 'S', 'T'].includes(fila);
   }
 
+  // Métodos auxiliares para obtener el nombre y precio del producto de Candy correctamente
+  getNombreCandy(item: any): string {
+    return item?.producto?.nombre || item?.nombre || 'Producto Candy';
+  }
+
+  getPrecioCandy(item: any): number {
+    return Number(item?.producto?.precio) || Number(item?.precio) || 0;
+  }
+
   async calcularTotales() {
-    // 1. Subtotal de Entradas
     this.subtotalEntradas = (this.resumen?.asientos || []).reduce((acc: number, b: any) => {
-      const precio = b.precio || (this.esVip(b) ? this.precioEntradaVip : this.precioEntradaBase);
+      const precio = Number(b.precio) || (this.esVip(b) ? this.precioEntradaVip : this.precioEntradaBase);
       return acc + precio;
     }, 0);
 
-    // 2. Subtotal de Candy
     this.subtotalCandy = (this.resumen?.candy || []).reduce((acc: number, p: any) => {
-      return acc + (p.precio * (p.cantidad || 1));
+      const precioUnitario = this.getPrecioCandy(p);
+      const cantidad = Number(p.cantidad) || 1;
+      return acc + (precioUnitario * cantidad);
     }, 0);
 
-    // Subtotal de la compra
     this.subtotalCompra = this.subtotalEntradas + this.subtotalCandy;
 
-    // 3. Porcentaje de Descuento
-    this.porcentajeDescuento = await this.compraServicio.calcularPorcentajeDescuento();
+    try {
+      const rawDescuento = await this.compraServicio.calcularPorcentajeDescuento();
+      this.porcentajeDescuento = Number(rawDescuento) || 0;
+    } catch {
+      this.porcentajeDescuento = 0;
+    }
+
+    if (this.porcentajeDescuento > 100) {
+      this.porcentajeDescuento = 0;
+    }
+
+    if (this.porcentajeDescuento > 0) {
+      const usuario = this.compraServicio.usuarioInfo;
+      let esMayor = false;
+
+      if (usuario.fechaNacimiento) {
+        const hoy = new Date();
+        const nacimiento = new Date(usuario.fechaNacimiento);
+        let edad = hoy.getFullYear() - nacimiento.getFullYear();
+        const mes = hoy.getMonth() - nacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+          edad--;
+        }
+        esMayor = edad >= 18;
+      }
+
+      if (esMayor) {
+        this.mensajeDescuento = `Descuento para mayores de edad (${this.porcentajeDescuento}%)`;
+      } else {
+        this.mensajeDescuento = `Descuento de bienvenida por primera compra (${this.porcentajeDescuento}%)`;
+      }
+    } else {
+      this.mensajeDescuento = '';
+    }
+
     this.montoDescuento = (this.subtotalCompra * this.porcentajeDescuento) / 100;
+    const totalConDescuento = Math.max(0, this.subtotalCompra - this.montoDescuento);
 
-    const totalConDescuento = this.subtotalCompra - this.montoDescuento;
-
-    // 4. Crédito de Usuario
-    if (this.resumen?.usuario?.creditoDisponible > 0) {
-      this.creditoAplicado = Math.min(this.resumen.usuario.creditoDisponible, totalConDescuento);
+    const creditoDisponible = Number(this.resumen?.usuario?.creditoDisponible) || 0;
+    if (creditoDisponible > 0) {
+      this.creditoAplicado = Math.min(creditoDisponible, totalConDescuento);
     } else {
       this.creditoAplicado = 0;
     }
 
     this.totalPagar = Math.max(0, totalConDescuento - this.creditoAplicado);
+
+    this.cdr.detectChanges();
   }
 
   volverAlCandy() {
@@ -106,16 +149,16 @@ export class Pago implements OnInit {
       this.codigoQRTexto = codigoQR;
 
       try {
-        // Genera la imagen Base64 del QR al instante en el cliente
         this.qrImageUrl = await QRCode.toDataURL(codigoQR, {
           width: 250,
           margin: 2
         });
       } catch (error) {
-        console.error('Error generando el código QR:', error);
+        console.log("Error al generar el QR de la compra");
       }
 
       this.mostrarModalQR = true;
+      this.cdr.detectChanges();
     } else {
       alert('Error al guardar la venta en la base de datos. Por favor, reintenta.');
     }

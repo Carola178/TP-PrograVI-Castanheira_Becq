@@ -24,10 +24,6 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/proximos-estrenos/proximos-estrenos').then(m => m.ProximosEstrenos)
     },
     {
-        path: 'contacto',
-        loadComponent: () => import('./componentes/contacto/contacto').then(m => m.Contacto)
-    },
-    {
         path: 'login',
         loadComponent: () => import('./componentes/login/login').then(m => m.Login)
     },
@@ -46,9 +42,27 @@ export const routes: Routes = [
     {
         path: 'admin', 
         loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin), 
-        canActivate: [adminGuard]
-    },
-    
+        canActivate: [adminGuard],
+        children: [
+            {
+                path: '',
+                redirectTo: 'funciones',
+                pathMatch: 'full'
+            },
+            {
+            path: 'funciones',
+                loadComponent: () => import('./componentes/admin/admin-funciones/admin-funciones').then(m => m.AdminFunciones)
+            },
+            {
+                path: 'descuentos',
+                loadComponent: () => import('./componentes/admin/admin-descuentos/admin-descuentos').then(m => m.AdminDescuentos)
+            },
+            {
+                path: 'candy',
+                loadComponent: () => import('./componentes/admin/admin-candy/admin-candy').then(m => m.AdminCandy)
+            }
+        ] 
+    }, 
     {
         path: '**',
         redirectTo: 'login' 
