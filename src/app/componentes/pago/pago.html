@@ -70,22 +70,25 @@
         </div>
     </div>
 
-    @if (mostrarModalQR) {
-        <div class="modal-overlay">
-            <div class="modal-content">
-                <h2>¡Pago Procesado con Éxito!</h2>
-                <p>Presenta este código QR en la entrada del cine y en la barra del Candy Bar:</p>
-                
-                <div class="qr-container">
-                    <img [src]="qrImageUrl" alt="Código QR de la Entrada">
-                </div>
-
-                <p class="codigo-texto"><strong>Código:</strong> {{ codigoQRTexto }}</p>
-
-                <button class="btn-finalizar" (click)="cerrarModalYFinalizar()">
-                    Aceptar y Volver a la Cartelera
-                </button>
+@if (mostrarModalQR) {
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <h2>¡Pago Procesado con Éxito!</h2>
+            <p>Presenta este código QR en la entrada del cine y en la barra del Candy Bar:</p>
+            
+            <div class="qr-container">
+                <img [src]="qrImageUrl" alt="Código QR de la Entrada">
             </div>
+
+            <p class="codigo-texto"><strong>Código:</strong> {{ codigoQRTexto }}</p>
+
+            <button class="btn-descargar" (click)="descargarPDF()">
+                📥 Descargar Entrada en PDF
+            </button>
+
+            <button class="btn-finalizar" (click)="cerrarModalYFinalizar()">
+                Aceptar y Volver a la Cartelera
+            </button>
         </div>
-    }
-</div>
+    </div>
+}

@@ -72,10 +72,6 @@ export class CompraServicio {
         }
     }
 
-    // ===============================================================
-    // MÉTODOS DE NAVEGACIÓN Y SELECCIÓN DE FUNCIÓN Y ASIENTOS
-    // ===============================================================
-
     seleccionarFuncion(pelicula: PeliculaData | any, funcionId?: number | string): void {
         if (pelicula) {
             this.peliculaSeleccionada = pelicula;
@@ -91,10 +87,6 @@ export class CompraServicio {
             this.funcionId = funcionId;
         }
     }
-
-    // ===============================================================
-    // MÉTODOS DE GESTIÓN DE CANDY BAR
-    // ===============================================================
 
     agregarProductoCandy(producto: Producto): void {
         const index = this.productosCandy.findIndex(item => item.producto.id === producto.id);
@@ -119,10 +111,6 @@ export class CompraServicio {
         const item = this.productosCandy.find(i => i.producto.id === productoId);
         return item ? item.cantidad : 0;
     }
-
-    // ===============================================================
-    // MÉTODOS DE RESUMEN, COMPRA Y LIMPIEZA
-    // ===============================================================
 
     getResumenCompra() {
         const totalEntradas = this.asientosSeleccionados.reduce((acc, b: any) => {
@@ -152,28 +140,25 @@ export class CompraServicio {
 
     async confirmarYGuardarCompra(
         montoOMetodo: string | number = 'Efectivo',
-        creditoAplicado: number = 0
+        creditoAplicado: number = 0,
+        montoDescuento: number = 0
     ): Promise<{ exito: boolean; codigoQR?: string; error?: any }> {
         try {
             const resumen = this.getResumenCompra();
-            
             let montoTotalCalculado = resumen.totalGeneral;
-            let metodoPagoFinal = 'Efectivo';
 
             if (typeof montoOMetodo === 'number') {
                 montoTotalCalculado = montoOMetodo;
-            } else if (typeof montoOMetodo === 'string') {
-                metodoPagoFinal = montoOMetodo;
             }
 
-            const montoFinal = Math.max(0, montoTotalCalculado - creditoAplicado);
+            const subtotalConDescuento = Math.max(0, montoTotalCalculado - montoDescuento);
+            const montoFinal = Math.max(0, subtotalConDescuento - creditoAplicado);
             const codigoQRGenerado = `CINE-${Math.random().toString(36).substring(2, 9).toUpperCase()}-${Date.now()}`;
 
-            // Objeto que coincide EXACTAMENTE con las columnas de Supabase
             const compraData = {
                 usuarioId: this.usuarioInfo.id || null,
                 total: montoFinal,
-                descuentoAplicado: 0,
+                descuentoAplicado: montoDescuento,
                 creditoUsado: creditoAplicado,
                 puntosGanados: 0,
                 puntosUsados: 0,
@@ -225,9 +210,6 @@ export class CompraServicio {
         return edad;
     }
 
-    // ===============================================================
-    // CÁLCULO DE DESCUENTO 
-    // ===============================================================
     async calcularPorcentajeDescuento(): Promise<number> {
         if (!this.usuarioInfo.esRegistrado || !this.usuarioInfo.id) {
             return 0;
@@ -275,10 +257,6 @@ export class CompraServicio {
             return 0;
         }
     }
-
-    // ===============================================================
-    // MÉTODOS PARA EL PANEL DE ADMINISTRADOR
-    // ===============================================================
 
     async obtenerConfiguracionesDescuentos(): Promise<ConfiguracionDescuento[]> {
         const { data, error } = await this.supabase
