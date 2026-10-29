@@ -34,7 +34,13 @@
                 <span class="tag-genero">{{ pelicula.generos }}</span>
               </div>
               <h3>{{ pelicula.titulo }}</h3>
-              <p class="estrellas" *ngIf="pelicula.promedioEstrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+              
+              <!-- Puntuación dinámica de cartelera (Destacadas) -->
+              <p class="estrellas">
+                ⭐ {{ calificacionesMap[pelicula.id!]?.average || '0.0' }} 
+                <span class="text-muted small">({{ calificacionesMap[pelicula.id!]?.count || 0 }} reseñas)</span>
+              </p>
+
               <p class="duracion" *ngIf="pelicula.duracionMinutos">Duración: {{ pelicula.duracionMinutos }} min</p>
               <p class="sinopsis">{{ pelicula.sinopsis }}</p>
               
@@ -65,7 +71,13 @@
               <span class="tag-genero">{{ pelicula.generos }}</span>
             </div>
             <h3>{{ pelicula.titulo }}</h3>
-            <p class="estrellas" *ngIf="pelicula.promedioEstrellas">Puntuación: {{ pelicula.promedioEstrellas }} / 5</p>
+            
+            <!-- Puntuación dinámica de cartelera (Generales) -->
+            <p class="estrellas">
+              ⭐ {{ calificacionesMap[pelicula.id!]?.average || '0.0' }} 
+              <span class="text-muted small">({{ calificacionesMap[pelicula.id!]?.count || 0 }} reseñas)</span>
+            </p>
+
             <p class="duracion" *ngIf="pelicula.duracionMinutos">Duración: {{ pelicula.duracionMinutos }} min</p>
             <p class="sinopsis">{{ pelicula.sinopsis }}</p>
             

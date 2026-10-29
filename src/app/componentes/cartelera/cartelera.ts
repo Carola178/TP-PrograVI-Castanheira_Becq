@@ -7,7 +7,8 @@ import { Subscription } from 'rxjs';
 import { PeliculaData } from '../../models/peliculaData';
 import { PeliculaServicio } from '../../services/peliculaServicio';
 import { CompraServicio } from '../../services/compraServicio';
-import { Auth } from '../../services/auth'; // Adjust path if needed
+import { Auth } from '../../services/auth'; 
+import { ReseniaServicio } from '../../services/reseniaServicio'; 
 
 @Component({
   selector: 'app-cartelera',
@@ -22,11 +23,13 @@ export class Cartelera implements OnInit, OnDestroy {
   generosDisponibles: string[] = ['Todos', 'Acción', 'Aventura', 'Drama', 'Ciencia Ficción', 'Terror'];
 
   peliculas: PeliculaData[] = [];
+  calificacionesMap: { [key: number]: { average: number, count: number } } = {}; 
   private peliculasSub!: Subscription;
 
   constructor(
     private peliculaServicio: PeliculaServicio,
     private compraServicio: CompraServicio,
+    private reseniaServicio: ReseniaServicio, 
     private auth: Auth, 
     private router: Router,
     private cdr: ChangeDetectorRef 
@@ -34,9 +37,10 @@ export class Cartelera implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.peliculasSub = this.peliculaServicio.peliculas$.subscribe({
-      next: (datos: PeliculaData[]) => {
+      next: async (datos: PeliculaData[]) => {
         console.log('Películas mostradas en Cartelera:', datos);
         this.peliculas = datos;
+        await this.cargarPromediosReseñas();
         this.cdr.detectChanges();
       },
       error: (err: unknown) => {
@@ -54,6 +58,20 @@ export class Cartelera implements OnInit, OnDestroy {
       .catch((err: unknown) => {
         console.error('Error al traer películas de la BDD:', err);
       });
+  }
+
+  // Método para obtener el promedio y cantidad de reseñas de cada película
+  async cargarPromediosReseñas(): Promise<void> {
+    for (const p of this.peliculas) {
+      if (p.id) {
+        try {
+          const resumen = await this.reseniaServicio.getMovieRatingSummary(p.id);
+          this.calificacionesMap[p.id] = resumen;
+        } catch (e) {
+          this.calificacionesMap[p.id] = { average: 0, count: 0 };
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {
@@ -83,6 +101,7 @@ export class Cartelera implements OnInit, OnDestroy {
       return coincideTitulo && coincideGenero;
     });
   }
+
   async seleccionarPelicula(pelicula: PeliculaData, irASala: boolean = true): Promise<void> {
     if (pelicula.esMayor18) {
       const usuario = await this.auth.getUsuarioActual();
@@ -105,8 +124,6 @@ export class Cartelera implements OnInit, OnDestroy {
     }
 
     this.compraServicio.seleccionarFuncion(pelicula);
-
-
 
     if (irASala) {
       this.router.navigate(['/sala', pelicula.id]); 

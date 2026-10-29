@@ -21,8 +21,8 @@
           <strong>Duración:</strong> {{ pelicula.duracionMinutos }} min
         </p>
 
-        <p class="puntuacion" *ngIf="pelicula.promedioEstrellas">
-          <strong>Puntuación:</strong> {{ pelicula.promedioEstrellas }} / 5
+        <p class="puntuacion">
+          <strong>Puntuación del público:</strong> ⭐ {{ averageRating }} / 5 ({{ totalReviews }} calificaciones)
         </p>
 
         <p class="sinopsis" *ngIf="pelicula.sinopsis">
@@ -62,6 +62,72 @@
 
       </div>
     </div>
+
+    <!-- SECCIÓN DE RESEÑAS -->
+    <div class="seccion-resenias mt-5">
+      <hr>
+      <h3>Opiniones y Reseñas</h3>
+
+      <!-- Formulario -->
+      <div class="card p-4 mb-4 shadow-sm bg-light">
+        <h5>Deja tu reseña</h5>
+        
+        <!-- Estrellas -->
+        <div class="star-rating mb-3">
+          <span 
+            *ngFor="let star of [1, 2, 3, 4, 5]" 
+            (click)="setRating(star)"
+            [class.text-warning]="star <= selectedRating"
+            [class.text-muted]="star > selectedRating"
+            style="cursor: pointer; font-size: 1.8rem; margin-right: 4px;">
+            ★
+          </span>
+        </div>
+
+        <!-- Comentario -->
+        <div class="mb-3">
+          <textarea 
+            class="form-control" 
+            rows="2" 
+            maxlength="280"
+            [(ngModel)]="comentarioText" 
+            placeholder="Escribe un comentario corto (máx. 280 caracteres)...">
+          </textarea>
+        </div>
+
+        <p *ngIf="errorMessage" class="text-danger small">{{ errorMessage }}</p>
+
+        <button 
+          class="btn btn-primary" 
+          [disabled]="isSubmitting" 
+          (click)="submitReview()">
+          Publicar reseña
+        </button>
+      </div>
+
+      <!-- Listado -->
+      <div class="resenias-list">
+        <div *ngIf="reviews.length === 0" class="text-muted fst-italic">
+          Aún no hay opiniones sobre esta película. ¡Sé el primero en dejar una!
+        </div>
+
+        <div *ngFor="let review of reviews" class="card mb-2 p-3 shadow-sm border-0">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <strong class="text-dark">
+              {{ review.Usuarios?.nombre || 'Usuario' }} {{ review.Usuarios?.apellido || '' }}
+            </strong>
+            <span class="text-warning">
+              {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}
+            </span>
+          </div>
+          <p class="mb-0 text-secondary">{{ review.comentario }}</p>
+          <small class="text-muted mt-1" style="font-size: 0.75rem;">
+            {{ review.created_at | date:'short' }}
+          </small>
+        </div>
+      </div>
+    </div>
+
   } @else {
     <div class="error">
       <p>No se encontró la película seleccionada.</p>
