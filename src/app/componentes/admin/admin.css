@@ -1,45 +1,114 @@
-    .admin-container {
+
+/* CONTENEDOR GENERAL */
+
+.admin-container {
     display: flex;
     min-height: calc(100vh - 80px);
-    }
+}
 
-    .admin-sidebar {
+/* MENÚ LATERAL */
+
+.admin-sidebar {
     width: 260px;
+    flex-shrink: 0;
+    box-sizing: border-box;
     background-color: #b21919;
     color: white;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    }
+}
 
-    .admin-sidebar button {
+.admin-sidebar h2 {
+    margin: 0 0 15px;
+    font-size: 22px;
+}
+
+.admin-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ENLACES DEL MENÚ */
+
+.admin-sidebar a {
+    display: block;
     width: 100%;
+    box-sizing: border-box;
     padding: 0.75rem 1rem;
     background: transparent;
     border: none;
     color: #ccc;
     text-align: left;
+    text-decoration: none;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 6px;
     transition: all 0.2s ease;
-    }
+}
 
-    .admin-sidebar button:hover {
+.admin-sidebar a:hover {
     background-color: #333;
     color: white;
-    }
+}
 
-    .admin-sidebar button.active {
-    background-color: #e50914; 
+.admin-sidebar a.active {
+    background-color: #e50914;
     color: white;
     font-weight: bold;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.admin-content {
+    flex: 1;
+    min-width: 0;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: #121212;
+    color: white;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .admin-container {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+    }
+
+    .admin-sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin-sidebar a {
+        width: auto;
+        flex: 1 1 180px;
     }
 
     .admin-content {
-    flex: 1;
-    padding: 2rem;
-    background-color: #121212;
-    color: white;
+        padding: 1.5rem;
     }
+}
+
+@media (max-width: 480px) {
+
+    .admin-sidebar {
+        padding: 1rem;
+    }
+
+    .admin-sidebar a {
+        flex: 1 1 100%;
+    }
+
+    .admin-content {
+        padding: 1rem;
+    }
+}

@@ -3,14 +3,16 @@ import { Auth } from '../../services/auth';
 import { Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordsIncorrectas } from '../validators/usuario.validators';
+import { ModalBienvenida } from '../modal-bienvenida/modal-bienvenida';
 
 @Component({
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, ModalBienvenida],
   selector: 'app-login',
   styleUrl: './login.css',
   templateUrl: './login.html',
 })
-export class Login implements OnInit {
+export class Login {
+  mostrarModalBienvenida = signal(false);
   errorMessage = signal<string | null>(null);
 
   loginModel = new FormGroup({
@@ -24,9 +26,6 @@ export class Login implements OnInit {
 
   constructor(private auth: Auth, private router: Router) {}
 
-  ngOnInit(): void {
-    this.loginModel.valueChanges.subscribe(estado => console.log(estado));
-  }
 
   async onSubmit(event: Event) {
     event.preventDefault();
@@ -46,8 +45,10 @@ export class Login implements OnInit {
       return;
     }
 
-    console.log('Login exitoso: ', resultado.data);
-    this.router.navigate(['/cartelera']);
+    this.mostrarModalBienvenida.set(true);
+    setTimeout(() => {
+        this.router.navigate(['/cartelera']);
+    }, 2000);
   }
 
   onContinuarComoInvitado(): void {

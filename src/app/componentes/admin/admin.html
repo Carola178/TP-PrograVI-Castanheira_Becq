@@ -1,24 +1,48 @@
+
 <div class="admin-container">
+
     <aside class="admin-sidebar">
+
         <h2>Panel Admin</h2>
+
         <nav>
-        <button (click)="cambiarSeccion('funciones')" [class.active]="seccionActual === 'funciones'">
-            Funciones y Películas
-        </button>
-        <button (click)="cambiarSeccion('candy')" [class.active]="seccionActual === 'candy'">
-            Candy Bar y Combos
-        </button>
-        <button (click)="cambiarSeccion('descuentos')" [class.active]="seccionActual === 'descuentos'">
-            Descuentos y Puntos
-        </button>
+
+            <a
+                routerLink="/admin/funciones"
+                routerLinkActive="active"
+            >
+                Funciones y Películas
+            </a>
+
+            <a
+                routerLink="/admin/candy"
+                routerLinkActive="active"
+            >
+                Candy Bar y Combos
+            </a>
+
+            <a
+                routerLink="/admin/descuentos"
+                routerLinkActive="active"
+            >
+                Descuentos y Puntos
+            </a>
+
+            <a
+                routerLink="/admin/propuestas"
+                routerLinkActive="active"
+            >
+                Propuestas de Películas
+            </a>
+
         </nav>
+
     </aside>
 
     <main class="admin-content">
-        @switch (seccionActual) {
-        @case ('funciones') { <app-admin-funciones /> }
-        @case ('candy') { <app-admin-candy /> }
-        @case ('descuentos') { <app-admin-descuentos /> }
-        }
+
+        <router-outlet></router-outlet>
+
     </main>
+
 </div>

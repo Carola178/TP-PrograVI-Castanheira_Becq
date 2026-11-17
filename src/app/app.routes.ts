@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard } from './componentes/guards/admin-guard';
+import { AdminCandy } from './componentes/admin/admin-candy/admin-candy';
 
 export const routes: Routes = [
     { 
@@ -40,8 +41,10 @@ export const routes: Routes = [
         loadComponent: () => import('./componentes/pago/pago').then(m => m.Pago)
     },
     {
-        path: 'admin', 
-        loadComponent: () => import('./componentes/admin/admin').then(m => m.Admin), 
+        path: 'admin',
+        loadComponent: () =>
+            import('./componentes/admin/admin')
+                .then(m => m.Admin),
         canActivate: [adminGuard],
         children: [
             {
@@ -50,21 +53,38 @@ export const routes: Routes = [
                 pathMatch: 'full'
             },
             {
-            path: 'funciones',
-                loadComponent: () => import('./componentes/admin/admin-funciones/admin-funciones').then(m => m.AdminFunciones)
-            },
-            {
-                path: 'descuentos',
-                loadComponent: () => import('./componentes/admin/admin-descuentos/admin-descuentos').then(m => m.AdminDescuentos)
+                path: 'funciones',
+                loadComponent: () =>
+                    import('./componentes/admin/admin-funciones/admin-funciones')
+                        .then(m => m.AdminFunciones)
             },
             {
                 path: 'candy',
-                loadComponent: () => import('./componentes/admin/admin-candy/admin-candy').then(m => m.AdminCandy)
+                loadComponent: () =>
+                    import('./componentes/admin/admin-candy/admin-candy')
+                        .then(m => m.AdminCandy)
+            },
+            {
+                path: 'descuentos',
+                loadComponent: () =>
+                    import('./componentes/admin/admin-descuentos/admin-descuentos')
+                        .then(m => m.AdminDescuentos)
+            },
+            {
+                path: 'propuestas',
+                loadComponent: () =>
+                    import('./componentes/admin/admin-propuestas/admin-propuestas')
+                        .then(m => m.AdminPropuestas)
             }
-        ] 
-    }, 
-    {
-        path: '**',
-        redirectTo: 'login' 
-    }
+        ]
+    },
+        {
+        path: 'propuestas',
+        loadComponent: () =>
+            import('./componentes/propuestas/propuestas').then(m => m.Propuestas)
+        },
+        {
+            path: '**',
+            redirectTo: 'login' 
+        }
 ];

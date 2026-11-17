@@ -1,0 +1,243 @@
+
+/* =========================================
+   CONTENEDOR
+========================================= */
+
+.admin-propuestas {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado {
+    margin-bottom: 30px;
+}
+
+.encabezado h1 {
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.encabezado p {
+    color: #bbbbbb;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   FILTROS
+========================================= */
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.filtros button {
+    padding: 10px 18px;
+    background-color: #292929;
+    color: #dddddd;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.filtros button:hover {
+    background-color: #444444;
+}
+
+.filtros button.activo {
+    background-color: #b21919;
+    color: #ffffff;
+    border-color: #b21919;
+    font-weight: bold;
+}
+
+/* =========================================
+   LISTADO
+========================================= */
+
+.lista-propuestas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =========================================
+   TARJETAS
+========================================= */
+
+.tarjeta-propuesta {
+    background-color: #242424;
+    border: 1px solid #444444;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.tarjeta-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.tarjeta-encabezado h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 22px;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   ESTADOS
+========================================= */
+
+.estado {
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.estado.pendiente {
+    background-color: #765a20;
+    color: #ffe4a3;
+}
+
+.estado.aceptada {
+    background-color: #205c39;
+    color: #b5f2ca;
+}
+
+.estado.rechazada {
+    background-color: #702727;
+    color: #ffb7b7;
+}
+
+/* =========================================
+   DETALLE
+========================================= */
+
+.detalle h3 {
+    color: #ffffff;
+    font-size: 15px;
+    margin: 18px 0 8px;
+}
+
+.detalle p {
+    color: #cccccc;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #444444;
+}
+
+.acciones button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.acciones button:hover:not(:disabled) {
+    opacity: 0.85;
+}
+
+.acciones button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.boton-aceptar {
+    background-color: #257a46;
+    color: #ffffff;
+}
+
+.boton-rechazar {
+    background-color: #b21919;
+    color: #ffffff;
+}
+
+/* =========================================
+   MENSAJES
+========================================= */
+
+.mensaje {
+    padding: 25px;
+    text-align: center;
+    color: #bbbbbb;
+    background-color: #242424;
+    border-radius: 8px;
+}
+
+.mensaje-error {
+    padding: 14px;
+    margin-bottom: 20px;
+    background-color: #702727;
+    color: #ffffff;
+    border-radius: 6px;
+}
+
+.mensaje-exito {
+    padding: 14px;
+    margin-bottom: 20px;
+    background-color: #205c39;
+    color: #ffffff;
+    border-radius: 6px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .encabezado h1 {
+        font-size: 24px;
+    }
+
+    .tarjeta-propuesta {
+        padding: 20px;
+    }
+
+    .tarjeta-encabezado {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .acciones {
+        flex-direction: column;
+    }
+
+    .acciones button {
+        width: 100%;
+    }
+}

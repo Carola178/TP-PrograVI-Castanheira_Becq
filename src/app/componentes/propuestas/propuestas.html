@@ -1,0 +1,169 @@
+
+<div class="propuestas-contenedor">
+    <a routerLink="/cartelera" class="volver">
+        ← Volver a la cartelera
+    </a>
+
+    <div class="propuestas-layout">
+
+  
+        <div class="propuestas-imagen">
+            <img
+                src="/assets/cine4.avif"
+                alt="Sala de cine con espectadores mirando una película"
+            >
+        </div>
+
+        <section class="propuestas-tarjeta">
+
+            <div class="encabezado">
+
+                <span class="etiqueta">
+                    TU OPINIÓN IMPORTA
+                </span>
+
+                <h1>
+                    Proponé una película
+                    <i class="bi bi-camera-reels icono-cine"></i>
+                </h1>
+
+                <p>
+                    ¿Hay alguna película que te gustaría ver en nuestro cine?
+                    Enviá tu propuesta para que podamos evaluarla.
+                </p>
+
+            </div>
+
+            <div *ngIf="cargando" class="mensaje">
+                <p>Cargando propuestas...</p>
+            </div>
+
+            <div
+                *ngIf="!cargando && !usuarioAutenticado"
+                class="mensaje"
+            >
+                <p>
+                    Necesitás iniciar sesión para proponer películas.
+                </p>
+
+                <a routerLink="/login">
+                    Iniciar sesión
+                </a>
+            </div>
+
+            <div
+                *ngIf="!cargando && usuarioAutenticado && propuestaPendiente"
+                class="estado-pendiente"
+            >
+
+                <h2>Tenés una propuesta pendiente</h2>
+
+                <p>
+                    Ya enviaste una película para que sea evaluada.
+                    Cuando se resuelva, podrás enviar otra.
+                </p>
+
+                <div class="detalle-propuesta">
+
+                    <h3>
+                        {{ propuestaPendiente?.titulo }}
+                    </h3>
+
+                    <p>
+                        {{ propuestaPendiente?.descripcion }}
+                    </p>
+
+                    <span>
+                        Estado: Pendiente de revisión
+                    </span>
+
+                </div>
+
+            </div>
+
+            <form
+                *ngIf="!cargando && usuarioAutenticado && !propuestaPendiente"
+                (ngSubmit)="enviarPropuesta()"
+                #formPropuesta="ngForm">
+
+                <div class="campo">
+
+                    <label for="titulo">
+                        Título de la película
+                    </label>
+
+                    <input
+                        id="titulo"
+                        type="text"
+                        name="titulo"
+                        [(ngModel)]="titulo"
+                        required
+                        maxlength="150"
+                        placeholder="Ej: Interestelar"
+                    >
+
+                </div>
+                <div class="campo">
+
+                    <label for="descripcion">
+                        Descripción
+                    </label>
+
+                    <textarea
+                        id="descripcion"
+                        name="descripcion"
+                        [(ngModel)]="descripcion"
+                        required
+                        maxlength="1000"
+                        rows="4"
+                        placeholder="Contanos de qué trata la película..."
+                    ></textarea>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="justificacion">
+                        ¿Por qué debería estar en nuestro cine?
+                    </label>
+
+                    <textarea
+                        id="justificacion"
+                        name="justificacion"
+                        [(ngModel)]="justificacion"
+                        required
+                        maxlength="1000"
+                        rows="4"
+                        placeholder="Contanos por qué te gustaría verla..."
+                    ></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="boton-enviar"
+                    [disabled]="formPropuesta.invalid || enviando"
+                >
+                    {{ enviando ? 'Enviando...' : 'Enviar propuesta' }}
+                </button>
+
+            </form>
+
+            <p
+                *ngIf="mensajeError"
+                class="mensaje-error"
+            >
+                {{ mensajeError }}
+            </p>
+            <p
+                *ngIf="mensajeExito && !propuestaPendiente"
+                class="mensaje-exito"
+            >
+                {{ mensajeExito }}
+            </p>
+
+        </section>
+
+    </div>
+
+</div>

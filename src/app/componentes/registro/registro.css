@@ -1,10 +1,53 @@
-.registro-formulario {
-    background-color: #ffffff;
-    max-width: 380px;
-    margin: 50px auto; 
-    padding: 30px;
+
+/* =========================================
+   CONTENEDOR GENERAL: IMAGEN + FORMULARIO
+========================================= */
+
+.registro-layout {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    width: calc(100% - 40px);
+    max-width: 1100px;
+    margin: 40px auto;
     border-radius: 12px;
+    overflow: hidden;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    align-items: stretch;
+}
+
+/* =========================================
+   IMAGEN DEL CINE - IZQUIERDA
+========================================= */
+
+.registro-imagen {
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.registro-imagen img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% center;
+    display: block;
+}
+
+/* =========================================
+   FORMULARIO - DERECHA
+========================================= */
+
+.registro-formulario {
+    background-color: #b15151;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+    padding: 35px 45px;
+    border-radius: 0;
+    box-shadow: none;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
     color: #333333;
 }
@@ -13,10 +56,13 @@
     text-align: center;
     margin-top: 0;
     margin-bottom: 24px;
-    color: #5c181e; 
-    font-size: 26px;
+    color: var(--color-superficie);
+    font-size: 30px;
 }
 
+/* =========================================
+   FORMULARIO
+========================================= */
 
 .registro-formulario form {
     display: flex;
@@ -24,34 +70,112 @@
     gap: 18px;
 }
 
-.registro-formulario label {
+/* CONTENEDOR DE CADA CAMPO */
+
+.registro-formulario form > div {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #444444;
+    width: 100%;
 }
 
+/* LABELS */
 
-.registro-formulario input {
+.registro-formulario label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4A2020;
+}
+
+/* =========================================
+   INPUTS Y SELECTORES
+========================================= */
+
+.registro-formulario input,
+.registro-formulario select {
+    width: 100%;
+    box-sizing: border-box;
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
+    font-family: inherit;
+    background-color: rgb(219, 186, 186);
+    color: #333333;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.registro-formulario input:focus {
-    border-color: #5c181e;
+.registro-formulario input:focus,
+.registro-formulario select:focus {
+    border-color: var(--color-superficie);
     box-shadow: 0 0 0 3px rgba(92, 24, 30, 0.15);
 }
+
+/* =========================================
+   MENSAJES DE ERROR
+========================================= */
+
+.registro-formulario input.ng-invalid.ng-touched,
+.registro-formulario select.ng-invalid.ng-touched,
+.registro-formulario .input-error {
+    border: 1px solid var(--color-primario-hover);
+}
+
+.registro-formulario .mensaje-error {
+    display: block;
+    width: 100%;
+    color: #5c1010;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+/* =========================================
+   CONTRASEÑA
+========================================= */
+
+.password-contenedor {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-contenedor input {
+    width: 100%;
+    padding-right: 95px;
+}
+
+.registro-formulario .password-contenedor .boton-ojo {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    margin: 0;
+    padding: 6px 10px;
+    background-color: var(--color-superficie);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.registro-formulario .password-contenedor .boton-ojo:hover {
+    background-color: var(--color-primario-hover);
+}
+
+/* =========================================
+   BOTONES
+========================================= */
 
 .registro-formulario button {
     margin-top: 10px;
     padding: 12px;
-    background-color: #5c181e;
+    background-color: var(--color-superficie);
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -61,16 +185,24 @@
     transition: background-color 0.2s;
 }
 
-.registro-formulario button:hover {
-    background-color: #421015;
+.registro-formulario button:hover:not(:disabled) {
+    background-color: var(--color-primario-hover);
 }
 
+.registro-formulario button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   ENLACES
+========================================= */
 
 .registro-formulario a {
     display: block;
     text-align: center;
     margin-top: 20px;
-    color: #5c181e;
+    color: var(--color-superficie);
     font-weight: bold;
     text-decoration: none;
     font-size: 14px;
@@ -80,9 +212,123 @@
     text-decoration: underline;
 }
 
-input.ng-touched.ng-invalid{
-    border: 1px solid red;
-    &:focus{
-        outline: 1px solid red;
+
+/* BOTONES EN UNA MISMA FILA */
+
+.registro-formulario form > .registro-acciones {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.registro-formulario .registro-acciones .boton-crear {
+    flex: 1;
+    min-width: 0;
+}
+
+.registro-formulario .registro-acciones .boton-limpiar {
+    flex: 0 0 auto;
+    padding: 12px 18px;
+    font-size: 14px;
+}
+
+/* BOTÓN CREAR CUENTA */
+
+.registro-formulario .boton-crear {
+    flex: 1;
+    padding: 12px;
+}
+
+/* BOTÓN LIMPIAR */
+
+.registro-formulario .boton-limpiar {
+    flex: 0 0 auto;
+    padding: 12px 18px;
+    font-size: 14px;
+    background-color: #874040;
+}
+
+.registro-formulario .boton-limpiar:hover {
+    background-color: var(--color-superficie);
+}
+
+/* ENLACE AL LOGIN */
+
+.registro-formulario .registro-login {
+    text-align: center;
+    margin: 8px 0 0;
+    color: #4A2020;
+    font-size: 14px;
+}
+
+.registro-formulario .registro-login a {
+    display: inline;
+    margin: 0 0 0 4px;
+    color: #4A2020;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.registro-formulario .registro-login a:hover {
+    color: #ffffff;
+}
+
+
+/* =========================================
+   RESPONSIVE - TABLETS
+========================================= */
+
+@media (max-width: 768px) {
+
+    .registro-layout {
+        grid-template-columns: 1fr;
+        width: calc(100% - 30px);
+        margin: 25px auto;
+    }
+
+    .registro-imagen {
+        height: 250px;
+    }
+
+    .registro-imagen img {
+        position: static;
+        height: 100%;
+        object-position: center;
+    }
+
+    .registro-formulario {
+        padding: 30px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE - CELULARES
+========================================= */
+
+@media (max-width: 480px) {
+
+    .registro-layout {
+        width: calc(100% - 30px);
+        margin: 20px auto;
+    }
+
+    .registro-imagen {
+        height: 180px;
+    }
+
+    .registro-formulario {
+        padding: 22px;
+    }
+
+    .registro-formulario h2 {
+        font-size: 23px;
+    }
+
+    .registro-formulario label {
+        font-size: 14px;
     }
 }

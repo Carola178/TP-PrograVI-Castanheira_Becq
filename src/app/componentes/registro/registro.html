@@ -1,66 +1,214 @@
-<div class="registro-formulario">
-<form class="registroFormulario" [formGroup]="registroModel" (ngSubmit)="onSubmit($event)">
-    <h2>Registro de usuarios</h2>
-    <div>
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" formControlName="nombre">
+
+<div class="registro-layout">
+
+    <!-- IZQUIERDA: IMAGEN DEL CINE -->
+    <div class="registro-imagen">
+        <img
+            src="/assets/cine.png"
+            alt="Personas disfrutando una película en el cine"
+        >
     </div>
 
-    <div>
-        <label for="apellido">Apellido</label>
-        <input type="text" id="apellido" formControlName="apellido">
-    </div>
+    <!-- DERECHA: FORMULARIO -->
+    <div class="registro-formulario">
 
-    <div>
-        <label for="email">Email</label>
-        <input type="text" id="email" formControlName="email" placeholder="usuario@gmail.com">
-    </div>
+        <form
+            class="registroFormulario"
+            [formGroup]="registroModel"
+            (ngSubmit)="onSubmit($event)"
+        >
 
-    <div>
-        <label for="fecha_nacimiento">Fecha de nacimiento</label>
-        <input type="date" id="fecha_nacimiento" formControlName="fechaNacimiento" min="1900-01-01" placeholder="Ej: 12/12/2012">
-    </div>
+            <h2>Registro de usuarios</h2>
 
-    <div>
-        <label for="tipo_sangre">Tipo de sangre</label>
-        <select id="tipo_sangre" formControlName="tipoSangre">
-            <option value="" disabled selected>Seleccione un tipo</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-        </select>
-    </div>
+            <!-- NOMBRE -->
+            <div>
+                <label for="nombre">Nombre</label>
+                <input
+                    type="text"
+                    id="nombre"
+                    formControlName="nombre"
+                    maxlength="21"
+                    (input)="formatearNombre('nombre')"
+                    [class.input-error]="campoInvalido('nombre')"
+                >
 
-    <div>
-        <label for="color_ojos">Color de ojos</label>
-        <select id="color_ojos" formControlName="colorOjos">
-            <option value="" disabled selected>Seleccione un color</option>
-            <option value="Marrón">Marrón / Café</option>
-            <option value="Azul">Azul</option>
-            <option value="Verde">Verde</option>
-            <option value="Miel / Avellana">Miel / Avellana</option>
-            <option value="Negro">Negro</option>
-            <option value="Gris">Gris</option>
-            <option value="Otro">Otro</option>>
-    </select>
-    </div>
+                <small
+                    *ngIf="campoInvalido('nombre')"
+                    class="mensaje-error"
+                >
+                    {{ obtenerError('nombre') }}
+                </small>
+            </div>
 
-    <div>
-        <label for="dias_vacaciones">Días de vacaciones</label>
-        <input type="number" id="dias_vacaciones" formControlName="diasVacaciones" min="0" max="365" step="1" placeholder="Ej: 7">
-    </div>
+            <!-- APELLIDO -->
+            <div>
+                <label for="apellido">Apellido</label>
+                <input
+                    type="text"
+                    id="apellido"
+                    formControlName="apellido"
+                    maxlength="21"
+                    (input)="formatearNombre('apellido')"
+                    [class.input-error]="campoInvalido('apellido')"
+                >
 
-    <div>
-        <label for="password">Password</label>
-        <input type="password" id="apellido" formControlName="password" placeholder="••••••••">
-    </div>
+                <small
+                    *ngIf="campoInvalido('apellido')"
+                    class="mensaje-error"
+                >
+                    {{ obtenerError('apellido') }}
+                </small>
+            </div>
 
-    <button type="submit" [disabled]="!registroModel.valid">Crear cuenta</button>
-    <button type="reset">Limpiar</button>
-</form>
-</div>
+            <!-- EMAIL -->
+            <div>
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    placeholder="usuario@gmail.com"
+                    [class.input-error]="campoInvalido('email')"
+                >
+
+                <small
+                    *ngIf="campoInvalido('email')"
+                    class="mensaje-error"
+                >
+                    {{ obtenerError('email') }}
+                </small>
+            </div>
+
+            <!-- FECHA DE NACIMIENTO -->
+            <div>
+                <label for="fecha_nacimiento">
+                    Fecha de nacimiento
+                </label>
+
+                <input
+                    type="text"
+                    id="fecha_nacimiento"
+                    formControlName="fechaNacimiento"
+                    placeholder="DD/MM/AAAA"
+                    maxlength="10"
+                    inputmode="numeric"
+                    autocomplete="bday"
+                    (input)="formatearFecha($event)"
+                    [class.input-error]="campoInvalido('fechaNacimiento')"
+                >
+
+                <small
+                    *ngIf="campoInvalido('fechaNacimiento')"
+                    class="mensaje-error"
+                >
+                    {{ obtenerError('fechaNacimiento') }}
+                </small>
+            </div>
+
+            <!-- TIPO DE SANGRE -->
+            <div>
+                <label for="tipo_sangre">Tipo de sangre</label>
+
+                <select
+                    id="tipo_sangre"
+                    formControlName="tipoSangre"
+                >
+                    <option value="" disabled>
+                        Seleccione un tipo
+                    </option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+
+            <!-- COLOR DE OJOS -->
+            <div>
+                <label for="color_ojos">Color de ojos</label>
+
+                <select
+                    id="color_ojos"
+                    formControlName="colorOjos"
+                >
+                    <option value="" disabled>
+                        Seleccione un color
+                    </option>
+                    <option value="Marrón">Marrón / Café</option>
+                    <option value="Azul">Azul</option>
+                    <option value="Verde">Verde</option>
+                    <option value="Miel / Avellana">
+                        Miel / Avellana
+                    </option>
+                    <option value="Negro">Negro</option>
+                    <option value="Gris">Gris</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+
+            <!-- DÍAS DE VACACIONES -->
+            <div>
+                <label for="dias_vacaciones">
+                    Días de vacaciones
+                </label>
+
+                <input
+                    type="number"
+                    id="dias_vacaciones"
+                    formControlName="diasVacaciones"
+                    min="0"
+                    max="365"
+                    step="1"
+                    placeholder="Ej: 7"
+                >
+            </div>
+
+            <!-- CONTRASEÑA -->
+            <div>
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    placeholder="••••••••"
+                >
+            </div>
+
+
+            <!-- BOTONES -->
+            <div class="registro-acciones">
+
+                <button
+                    type="submit"
+                    class="boton-crear"
+                    [disabled]="!registroModel.valid"
+                >
+                    Crear cuenta
+                </button>
+
+                <button
+                    type="reset"
+                    class="boton-limpiar"
+                >
+                    Limpiar
+                </button>
+
+            </div>
+
+            <!-- ENLACE AL LOGIN -->
+            <p class="registro-login">
+                ¿Ya tenés cuenta?
+                <a routerLink="/login">Iniciá sesión</a>
+            </p>
+
+        </form>
+
+    </div> 
+</div> 
+
+<app-modal-bienvenida *ngIf="mostrarModalBienvenida"></app-modal-bienvenida>

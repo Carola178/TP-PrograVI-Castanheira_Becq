@@ -1,0 +1,400 @@
+
+/* =========================================
+   FONDO GENERAL
+========================================= */
+
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: var(--color-fondo);
+    color: #1b0c0c;
+    font-family: Arial, sans-serif;
+}
+
+/* =========================================
+   CONTENEDOR GENERAL
+========================================= */
+
+.propuestas-contenedor {
+    width: 100%;
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 40px 20px 70px;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   VOLVER A CARTELERA
+========================================= */
+
+.volver {
+    display: inline-block;
+    margin-bottom: 25px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+
+.volver:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* =========================================
+   DISTRIBUCIÓN IMAGEN + PROPUESTAS
+========================================= */
+
+.propuestas-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 25px;
+    align-items: stretch;
+}
+
+/* =========================================
+   IMAGEN IZQUIERDA
+========================================= */
+
+.propuestas-imagen {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.propuestas-imagen img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* =========================================
+   TARJETA PRINCIPAL - DERECHA
+========================================= */
+
+.propuestas-tarjeta {
+    min-width: 0;
+    box-sizing: border-box;
+    background-color: #7e191e;
+    padding: 40px 45px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.encabezado {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.etiqueta {
+    color: #1b0c0c;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.encabezado h1 {
+    font-size: 30px;
+    color: #1b0c0c;
+    margin: 15px 0;
+}
+
+.encabezado p {
+    color: #1b0c0c;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+/* =========================================
+   ÍCONO DE CINE
+========================================= */
+
+.encabezado h1 .icono-cine {
+    color: #1b0c0c;
+    font-size: 28px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 22px;
+}
+
+.campo label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1b0c0c;
+}
+
+/* =========================================
+   INPUTS Y TEXTAREAS
+========================================= */
+
+.campo input,
+.campo textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: inherit;
+    background-color: rgb(187, 134, 134);
+    color: #1b0c0c;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: #806666;
+}
+
+.campo input:focus,
+.campo textarea:focus {
+    border-color: var(--color-superficie);
+    box-shadow: 0 0 0 3px rgba(92, 24, 30, 0.15);
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* =========================================
+   BOTÓN ENVIAR
+========================================= */
+
+.boton-enviar {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background-color: var(--color-superficie);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.boton-enviar:hover:not(:disabled) {
+    background-color: var(--color-primario-hover);
+}
+
+.boton-enviar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================================
+   PROPUESTA PENDIENTE
+========================================= */
+
+.estado-pendiente {
+    padding: 28px;
+    background-color: rgb(165, 70, 70);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.estado-pendiente h2 {
+    color: #1b0c0c;
+    font-size: 24px;
+    margin: 0 0 12px;
+}
+
+.estado-pendiente > p {
+    color: #1b0c0c;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* =========================================
+   DETALLE DE LA PROPUESTA
+========================================= */
+
+.detalle-propuesta {
+    margin-top: 22px;
+    padding: 24px;
+    background-color: rgb(165, 70, 70);
+    border: 1px solid #000000;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+
+.detalle-propuesta h3 {
+    color: #1b0c0c;
+    font-size: 21px;
+    margin: 0 0 12px;
+}
+
+.detalle-propuesta p {
+    color: #1b0c0c;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 18px;
+}
+
+/* =========================================
+   ESTADO DE LA PROPUESTA
+========================================= */
+
+.detalle-propuesta span {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: var(--color-superficie);
+    color: #ffffff;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* =========================================
+   MENSAJES
+========================================= */
+
+.mensaje {
+    text-align: center;
+    padding: 20px;
+    color: #ffffff;
+}
+
+.mensaje a {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 18px;
+    background-color: var(--color-superficie);
+    color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.mensaje a:hover {
+    background-color: var(--color-primario-hover);
+}
+
+.mensaje-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.mensaje-exito {
+    color: #ffffff;
+    background-color: var(--color-superficie);
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* =========================================
+   RESPONSIVE - TABLETS
+========================================= */
+
+@media (max-width: 850px) {
+
+    .propuestas-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .propuestas-imagen {
+        height: 220px;
+    }
+
+    .propuestas-imagen img {
+        position: static;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .propuestas-tarjeta {
+        padding: 30px;
+    }
+
+    .estado-pendiente {
+        padding: 22px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE - CELULARES
+========================================= */
+
+@media (max-width: 480px) {
+
+    .propuestas-contenedor {
+        padding: 20px 15px 40px;
+    }
+
+    .propuestas-layout {
+        gap: 15px;
+    }
+
+    .propuestas-imagen {
+        height: 180px;
+    }
+
+    .propuestas-tarjeta {
+        padding: 25px 20px;
+    }
+
+    .encabezado h1 {
+        font-size: 24px;
+    }
+
+    .encabezado h1 .icono-cine {
+        font-size: 22px;
+    }
+
+    .encabezado p {
+        font-size: 14px;
+    }
+
+    .campo label {
+        font-size: 14px;
+    }
+
+    .estado-pendiente {
+        padding: 20px 15px;
+    }
+
+    .estado-pendiente h2 {
+        font-size: 20px;
+    }
+
+    .detalle-propuesta {
+        padding: 20px 15px;
+    }
+}

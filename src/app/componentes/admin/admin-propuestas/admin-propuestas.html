@@ -1,0 +1,133 @@
+<div class="admin-propuestas">
+
+    <div class="encabezado">
+        <h1>Gestión de propuestas de películas</h1>
+
+        <p>
+            Revisá las películas sugeridas por los usuarios
+            y decidí cuáles incorporar al cine.
+        </p>
+    </div>
+
+    <div class="filtros">
+
+        <button
+            type="button"
+            [class.activo]="filtroActual === 'pendiente'"
+            (click)="cambiarFiltro('pendiente')"
+        >
+            Pendientes ({{ cantidadPendientes }})
+        </button>
+
+        <button
+            type="button"
+            [class.activo]="filtroActual === 'aceptada'"
+            (click)="cambiarFiltro('aceptada')"
+        >
+            Aceptadas
+        </button>
+
+        <button
+            type="button"
+            [class.activo]="filtroActual === 'rechazada'"
+            (click)="cambiarFiltro('rechazada')"
+        >
+            Rechazadas
+        </button>
+
+        <button
+            type="button"
+            [class.activo]="filtroActual === 'todas'"
+            (click)="cambiarFiltro('todas')"
+        >
+            Todas
+        </button>
+
+    </div>
+
+    <p *ngIf="mensajeError" class="mensaje-error">
+        {{ mensajeError }}
+    </p>
+
+    <p *ngIf="mensajeExito" class="mensaje-exito">
+        {{ mensajeExito }}
+    </p>
+
+    <div *ngIf="cargando" class="mensaje">
+        Cargando propuestas...
+    </div>
+
+    <div
+        *ngIf="!cargando && propuestasFiltradas.length === 0"
+        class="mensaje"
+    >
+        No hay propuestas para mostrar en esta categoría.
+    </div>
+
+    <div
+        *ngIf="!cargando && propuestasFiltradas.length > 0"
+        class="lista-propuestas"
+    >
+
+        <div
+            *ngFor="let propuesta of propuestasFiltradas"
+            class="tarjeta-propuesta"
+        >
+
+            <div class="tarjeta-encabezado">
+
+                <h2>{{ propuesta.titulo }}</h2>
+
+                <span
+                    class="estado"
+                    [ngClass]="propuesta.estado"
+                >
+                    {{ propuesta.estado }}
+                </span>
+
+            </div>
+
+            <div class="detalle">
+
+                <h3>Descripción</h3>
+                <p>{{ propuesta.descripcion }}</p>
+
+                <h3>Justificación</h3>
+                <p>{{ propuesta.justificacion }}</p>
+
+            </div>
+
+            <div
+                *ngIf="propuesta.estado === 'pendiente'"
+                class="acciones"
+            >
+
+                <button
+                    type="button"
+                    class="boton-aceptar"
+                    [disabled]="procesandoId !== null"
+                    (click)="cambiarEstado(propuesta, 'aceptada')"
+                >
+                    {{
+                        procesandoId === propuesta.id
+                            ? 'Procesando...'
+                            : 'Aceptar propuesta'
+                    }}
+                </button>
+
+                <button
+                    type="button"
+                    class="boton-rechazar"
+                    [disabled]="procesandoId !== null"
+                    (click)="cambiarEstado(propuesta, 'rechazada')"
+                >
+                    Rechazar propuesta
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

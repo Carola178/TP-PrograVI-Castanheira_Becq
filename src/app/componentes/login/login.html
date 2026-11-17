@@ -1,41 +1,116 @@
-<div class="login-formulario">
-    <form class="loginFormulario" [formGroup]="loginModel" (ngSubmit)="onSubmit($event)">
-        <h2>Inicio de sesión</h2>
 
-        @if (errorMessage()) {
-            <div class="error-banner">
-            {{ errorMessage() }}
-            </div>
-        }
+<div class="login-layout">
 
-        <div>
-            <label for="email">Email</label>
-            <input type="text" id="email" formControlName="email" placeholder="usuario@gmail.com">
-            
-            @if (loginModel.controls.email.touched && loginModel.controls.email.invalid) {
-            <small class="texto-error">Ingresa un correo electrónico válido.</small>
-            }
-        </div>
-
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" formControlName="password" placeholder="••••••••">
-            
-            @if (loginModel.controls.password.touched && loginModel.controls.password.invalid) {
-            <small class="texto-error">La contraseña no cumple con el formato requerido.</small>
-            }
-        </div>
-
-        <button type="submit" [disabled]="!loginModel.valid">Ingresar</button>
-        <button type="reset" (click)="errorMessage.set(null)">Limpiar</button>
-    </form>
-
-    <hr class="divisor" />
-
-    <div class="invitado-seccion">
-        <button type="button" class="btn-invitado" (click)="onContinuarComoInvitado()">Continuar como invitado</button>
+    <!-- IMAGEN IZQUIERDA -->
+    <div class="login-imagen">
+        <img
+            src="/assets/cine.png"
+            alt="Personas disfrutando una película en el cine"
+        >
     </div>
 
-    <p class="texto-pregunta">¿No tenés cuenta aún?</p>
-    <a routerLink="/registro">Registrate</a>
+    <!-- FORMULARIO DERECHO -->
+    <div class="login-formulario">
+
+        <form
+            class="loginFormulario"
+            [formGroup]="loginModel"
+            (ngSubmit)="onSubmit($event)"
+        >
+
+            <h2>Inicio de sesión</h2>
+
+            <!-- ERROR GENERAL -->
+            @if (errorMessage()) {
+                <div class="error-banner">
+                    {{ errorMessage() }}
+                </div>
+            }
+
+            <!-- EMAIL -->
+            <div class="login-campo">
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    placeholder="usuario@gmail.com"
+                >
+
+                @if (loginModel.controls.email.touched && loginModel.controls.email.invalid) {
+                    <small class="texto-error">
+                        Ingresá un correo electrónico válido.
+                    </small>
+                }
+            </div>
+
+            <!-- CONTRASEÑA -->
+            <div class="login-campo">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    formControlName="password"
+                    placeholder="••••••••"
+                >
+
+                @if (loginModel.controls.password.touched && loginModel.controls.password.invalid) {
+                    <small class="texto-error">
+                        La contraseña no cumple con el formato requerido.
+                    </small>
+                }
+            </div>
+
+            <!-- BOTONES -->
+            <div class="login-acciones">
+
+                <button
+                    type="submit"
+                    class="boton-ingresar"
+                    [disabled]="!loginModel.valid"
+                >
+                    Ingresar
+                </button>
+
+                <button
+                    type="reset"
+                    class="boton-limpiar"
+                    (click)="errorMessage.set(null)"
+                >
+                    Limpiar
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- SEPARADOR -->
+        <hr class="divisor">
+
+        <!-- INVITADO -->
+        <div class="invitado-seccion">
+            <button
+                type="button"
+                class="btn-invitado"
+                (click)="onContinuarComoInvitado()"
+            >
+                Continuar como invitado
+            </button>
+        </div>
+
+        <!-- ENLACE AL REGISTRO -->
+        <p class="texto-pregunta">
+            ¿No tenés cuenta?
+            <a routerLink="/registro">Registrate</a>
+        </p>
+
+    </div>
+
 </div>
+
+<!-- MODAL DE BIENVENIDA -->
+@if (mostrarModalBienvenida()) {
+    <app-modal-bienvenida></app-modal-bienvenida>
+}

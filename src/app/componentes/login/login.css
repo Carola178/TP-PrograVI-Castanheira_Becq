@@ -1,22 +1,72 @@
-.login-formulario {
-    background-color: #ffffff;
-    max-width: 380px;
-    margin: 50px auto; 
-    padding: 30px;
+
+/* =========================================
+   CONTENEDOR GENERAL
+========================================= */
+
+.login-layout {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    gap: 30px;
+    width: calc(100% - 40px);
+    max-width: 1100px;
+    margin: 50px auto;
+    align-items: stretch;
+}
+
+/* =========================================
+   IMAGEN IZQUIERDA
+========================================= */
+
+.login-imagen {
+    position: relative;
+    min-width: 0;
+    min-height: 560px;
+    overflow: hidden;
     border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.login-imagen img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% center;
+    display: block;
+}
+
+/* =========================================
+   FORMULARIO DERECHO
+========================================= */
+
+.login-formulario {
+    background-color: #b15151;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 35px 45px;
+    border-radius: 12px;
+    box-sizing: border-box;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     font-family: Arial, sans-serif;
     color: #333333;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .login-formulario h2 {
     text-align: center;
     margin-top: 0;
     margin-bottom: 24px;
-    color: #5c181e; 
-    font-size: 26px;
+    color: var(--color-superficie);
+    font-size: 30px;
 }
 
+/* =========================================
+   FORMULARIO
+========================================= */
 
 .login-formulario form {
     display: flex;
@@ -24,98 +74,233 @@
     gap: 18px;
 }
 
-.login-formulario label {
+.login-formulario .login-campo {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #444444;
+    width: 100%;
 }
 
+/* =========================================
+   LABELS
+========================================= */
+
+.login-formulario label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4A2020;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
 
 .login-formulario input {
+    width: 100%;
+    box-sizing: border-box;
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
+    font-family: inherit;
+    background-color: rgb(219, 186, 186);
+    color: #333333;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .login-formulario input:focus {
-    border-color: #5c181e;
+    border-color: var(--color-superficie);
     box-shadow: 0 0 0 3px rgba(92, 24, 30, 0.15);
 }
+
+/* =========================================
+   VALIDACIONES
+========================================= */
+
+.login-formulario input.ng-invalid.ng-touched {
+    border: 1px solid var(--color-primario-hover);
+}
+
+.login-formulario .texto-error {
+    display: block;
+    width: 100%;
+    color: #5c1010;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+.login-formulario .error-banner {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* =========================================
+   BOTONES GENERALES
+========================================= */
 
 .login-formulario button {
     margin-top: 10px;
     padding: 12px;
-    background-color: #5c181e;
+    background-color: var(--color-superficie);
     color: #ffffff;
     border: none;
     border-radius: 6px;
     font-size: 16px;
     font-weight: bold;
-    align-items: center;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.login-formulario button:hover {
-    background-color: #421015;
+.login-formulario button:hover:not(:disabled) {
+    background-color: var(--color-primario-hover);
 }
 
+.login-formulario button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
-.login-formulario a {
+/* =========================================
+   BOTONES INGRESAR Y LIMPIAR
+========================================= */
+
+.login-formulario .login-acciones {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.login-formulario .login-acciones button {
+    margin-top: 0;
+}
+
+.login-formulario .boton-ingresar {
+    flex: 1;
+    min-width: 0;
+}
+
+.login-formulario .boton-limpiar {
+    flex: 0 0 auto;
+    padding: 12px 18px;
+    font-size: 14px;
+    background-color: #874040;
+}
+
+/* =========================================
+   SEPARADOR
+========================================= */
+
+.login-formulario .divisor {
+    width: 100%;
+    border: none;
+    border-top: 1px solid rgba(74, 32, 32, 0.4);
+    margin: 25px 0 15px;
+}
+
+/* =========================================
+   CONTINUAR COMO INVITADO
+========================================= */
+
+.login-formulario .invitado-seccion {
+    width: 100%;
+}
+
+.login-formulario .btn-invitado {
     display: block;
+    width: 100%;
+    margin-top: 0;
+}
+
+/* =========================================
+   ENLACE AL REGISTRO
+========================================= */
+
+.login-formulario .texto-pregunta {
     text-align: center;
-    margin-top: 20px;
-    color: #5c181e;
-    font-weight: bold;
-    text-decoration: none;
+    margin: 20px 0 0;
+    color: #4A2020;
     font-size: 14px;
 }
 
-.login-formulario a:hover {
+.login-formulario .texto-pregunta a {
+    display: inline;
+    margin-left: 4px;
+    color: #4A2020;
+    font-size: 14px;
+    font-weight: bold;
     text-decoration: underline;
 }
 
-.texto-pregunta{
-    text-align: center;
+.login-formulario .texto-pregunta a:hover {
+    color: #ffffff;
 }
 
-input.ng-touched.ng-invalid{
-    border: 1px solid red;
-    &:focus{
-        outline: 1px solid red;
+/* =========================================
+   RESPONSIVE - TABLETS
+========================================= */
+
+@media (max-width: 900px) {
+    .login-layout {
+        grid-template-columns: 40% 60%;
+        gap: 20px;
+    }
+
+    .login-formulario {
+        padding: 30px 25px;
     }
 }
 
-.error-banner {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #f5c6cb;
-    margin-bottom: 15px;
-    text-align: center;
-}
+/* =========================================
+   RESPONSIVE - CELULARES
+========================================= */
 
-.texto-error {
-    color: #dc3545;
-    font-size: 0.85rem;
-    display: block;
-    margin-top: 4px;
-}
-
-.login-formulario .texto-pregunta,
-.login-formulario a {
-    text-align: center;
-    display: block;
-    margin-top: 10px;
-}
-.btn-invitado {
-    width: 100%;
-    margin-top: 15px;
+@media (max-width: 768px) {
+    .login-layout {
+        grid-template-columns: 1fr;
+        width: calc(100% - 30px);
+        margin: 25px auto;
     }
+
+    .login-imagen {
+        min-height: 0;
+        height: 240px;
+    }
+
+    .login-formulario {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-layout {
+        gap: 15px;
+        margin: 20px auto;
+    }
+
+    .login-imagen {
+        height: 180px;
+    }
+
+    .login-formulario {
+        padding: 22px;
+    }
+
+    .login-formulario h2 {
+        font-size: 23px;
+    }
+
+    .login-formulario label {
+        font-size: 14px;
+    }
+}
