@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PeliculaServicio } from '../../../services/peliculaServicio';
 import { PeliculaData } from '../../../models/peliculaData';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin-funciones',
@@ -35,11 +36,32 @@ export class AdminFunciones implements OnInit {
 
   constructor(
     private peliculaServicio: PeliculaServicio,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.cargarPeliculas();
+
+    this.route.queryParams.subscribe(params => {
+      const titulo = params['titulo'];
+      const descripcion = params['descripcion'];
+
+      if (titulo && descripcion) {
+        this.editandoId = null;
+        this.limpiarFormularioPelicula();
+
+        this.nuevaPelicula.titulo = titulo;
+        this.nuevaPelicula.sinopsis = descripcion;
+
+        this.cdr.detectChanges();
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+    });
   }
 
   async cargarPeliculas(): Promise<void> {
@@ -80,12 +102,13 @@ export class AdminFunciones implements OnInit {
     this.mensajeRespuesta = null;
 
     if (!this.nuevaPelicula.titulo || !this.nuevaPelicula.duracionMinutos) {
-      this.mensajeRespuesta = { exito: false, texto: 'El título y la duración son obligatorios.' };
+      this.mensajeRespuesta = {
+        exito: false,
+        texto: 'El título y la duración son obligatorios.'
+      };
       return;
     }
-
     this.cargando = true;
-
     try {
       let resultado: boolean = false;
 
@@ -94,37 +117,40 @@ export class AdminFunciones implements OnInit {
           id: this.editandoId,
           ...this.nuevaPelicula
         };
-        resultado = await this.peliculaServicio.actualizarPelicula(peliculaActualizada);
+        resultado = await this.peliculaServicio.actualizarPelicula(
+          peliculaActualizada
+        );
       } else {
-        const creada = await this.peliculaServicio.crearPelicula(this.nuevaPelicula);
+        const creada = await this.peliculaServicio.crearPelicula(
+          this.nuevaPelicula
+        );
         resultado = Boolean(creada);
       }
 
       if (resultado) {
-        this.mensajeRespuesta = { 
-          exito: true, 
-          texto: this.editandoId 
-            ? 'Película actualizada exitosamente.' 
-            : 'Película agregada exitosamente a la cartelera.' 
+        this.mensajeRespuesta = {
+          exito: true,
+          texto: this.editandoId
+            ? 'Película actualizada exitosamente.'
+            : 'Película agregada exitosamente a la cartelera.'
         };
         this.cancelarEdicion();
         await this.cargarPeliculas();
       } else {
-        this.mensajeRespuesta = { 
-          exito: false, 
-          texto: 'No se pudo guardar los cambios en Supabase. Revisa la consola.' 
+        this.mensajeRespuesta = {
+          exito: false,
+          texto: 'No se pudo guardar los cambios en Supabase. Revisa la consola.'
         };
       }
     } catch (error) {
       console.error('Error no controlado al guardar:', error);
-      this.mensajeRespuesta = { 
-        exito: false, 
-        texto: 'Ocurrió un error inesperado al conectar con el servidor.' 
+      this.mensajeRespuesta = {
+        exito: false,
+        texto: 'Ocurrió un error inesperado al conectar con el servidor.'
       };
     } finally {
-      // 3. Este bloque garantiza que el estado 'Guardando...' desaparezca SIEMPRE
       this.cargando = false;
-      this.cdr.detectChanges(); // Forzar renderizado en la vista
+      this.cdr.detectChanges();
     }
   }
 

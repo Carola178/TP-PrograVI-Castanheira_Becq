@@ -24,7 +24,8 @@ export class AdminPropuestas implements OnInit {
 
   constructor(
     private propuestasServicio: PropuestasServicio,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -70,11 +71,10 @@ export class AdminPropuestas implements OnInit {
     ).length;
   }
 
-
-    async cambiarEstado(
+  async cambiarEstado(
     propuesta: PropuestaPeliculaData,
     estado: 'aceptada' | 'rechazada'
-    ): Promise<void> {
+  ): Promise<void> {
 
     if (this.procesandoId !== null) return;
 
@@ -84,36 +84,40 @@ export class AdminPropuestas implements OnInit {
     this.cdr.detectChanges();
 
     try {
-
-        await this.propuestasServicio.cambiarEstado(
+      await this.propuestasServicio.cambiarEstado(
         propuesta.id,
         estado
-        );
-
-        // Actualizar la propuesta directamente en la lista
-        this.propuestas = this.propuestas.map(p =>
+      );
+      this.propuestas = this.propuestas.map(p =>
         p.id === propuesta.id
-            ? { ...p, estado }
-            : p
+          ? { ...p, estado }
+          : p
+      );
+
+      if (estado === 'aceptada') {
+        await this.router.navigate(
+          ['/admin/funciones'],
+          {
+            queryParams: {
+              titulo: propuesta.titulo,
+              descripcion: propuesta.descripcion
+            }
+          }
         );
 
-        this.mensajeExito = estado === 'aceptada'
-        ? `La propuesta "${propuesta.titulo}" fue aceptada correctamente.`
-        : `La propuesta "${propuesta.titulo}" fue rechazada correctamente.`;
+      } else {
 
+        this.mensajeExito =
+          `La propuesta "${propuesta.titulo}" fue rechazada correctamente.`;
+      }
     } catch (error) {
-
-        console.error('Error al actualizar propuesta:', error);
-
-        this.mensajeError = error instanceof Error
+      console.error('Error al actualizar propuesta:', error);
+      this.mensajeError = error instanceof Error
         ? error.message
         : 'No se pudo actualizar la propuesta.';
-
     } finally {
-
-        this.procesandoId = null;
-        this.cdr.detectChanges();
-
+      this.procesandoId = null;
+      this.cdr.detectChanges();
     }
-    }
+  }
 }
